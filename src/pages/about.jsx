@@ -55,7 +55,8 @@ const toggleFaq = (index) => {
       <Navbar />
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-12 px-6 py-12 max-w-7xl mx-auto">
+      <div className="flex flex-col lg:flex-row gap-12 px-6 py-12 max-w-7xl mx-auto pt-20">
+
         {/* Left Side - Brand Description */}
         <div className="lg:w-1/2 space-y-8">
          
