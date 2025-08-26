@@ -1,10 +1,10 @@
 @import "tailwindcss";
 @tailwind utilities;
 
+
 @font-face {
   font-family: 'Helvetica';
   src: url('./assets/fonts/HelveticaNeueMedium.otf') format('opentype');
-  font-weight: 300; 
   font-style: normal;
   font-display: swap;
 }
@@ -13,7 +13,6 @@
 @font-face {
   font-family: 'HelveticaThin';
   src: url('./assets/fonts/HelveticaNeueThin.otf') format('opentype');
-  font-weight: 200; /* Thin */
   font-style: normal;
   font-display: swap;
 }

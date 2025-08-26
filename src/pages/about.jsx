@@ -55,8 +55,8 @@ export default function About() {
       <Navbar />
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-40 px-2 py-16 max-w-[90rem] ml-40 pt-40">
-
+  <div className="flex flex-col lg:flex-row gap-40 px-4 py-16 max-w-[90rem] lg:ml-40 pt-40">
+      
         {/* Left Side - Brand Description */}
         <div className="lg:w-1/2 space-y-6">
           <img src={Logo} alt="Nexync Logo" className="h-32 mb-1" />
