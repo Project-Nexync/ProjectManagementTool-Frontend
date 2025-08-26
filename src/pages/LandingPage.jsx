@@ -1,7 +1,8 @@
 import Navbar from "../components/navbar"
 import backgroundImage from "../assets/bg-screen.png"
 import Logo from '../assets/nexync.png';
-import { Twitter, Github, MessageCircle, Facebook, Instagram } from "lucide-react"
+import { Button } from "../components/loginButton"
+import SocialBar from "../components/socialMedia";
 
 const LandingPage = () => {
   return (
@@ -11,8 +12,6 @@ const LandingPage = () => {
   className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
   style={{ backgroundImage: `url(${backgroundImage})` }}
     />
-     
-      {/* Transparent Navbar */}
       <Navbar/>
         
       {/* Main Landing Content */}
@@ -37,61 +36,23 @@ const LandingPage = () => {
 
             <h1 className="font-helvetica center text-xl font-light text-white">
                 an all-in-one project management platform built for the next generation of work.
-            </h1>    
-          
-          <div className="flex flex-col space-y-6 w-full max-w-md mx-auto">
-            <div className="text-white">
-              <p className="mb-2">first time visiting here ?</p>
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300">
-                register now
-              </button>
+            </h1>
+
+          <div className="flex flex-row justify-center gap-24 pt-12 w-full">
+            {/* Register column */}
+            <div className="flex flex-col items-center w-56">
+              <span className="mb-2 text-base text-[#bfcbe0]">first time visiting here ?</span>
+              <Button title="register now" subtitle="to get started" className="w-3/4" />
             </div>
-            
-            <div className="text-white">
-              <p className="mb-2">been here before ?</p>
-              <button className="w-full bg-transparent hover:bg-white hover:bg-opacity-20 text-white font-bold py-3 px-4 rounded border border-white transition duration-300">
-                login
-              </button>
+            {/* Login column */}
+            <div className="flex flex-col items-center w-56">
+              <span className="mb-2 text-base text-[#bfcbe0]">been here before ?</span>
+              <Button title="login" subtitle="and let's go" className="w-3/4" />
             </div>
-            
-            <button className="text-white hover:underline mt-4">
-              next time
-            </button>
           </div>
         </div>
       </div>
-      <div className="fixed right-6 top-1/2 transform -translate-y-1/2 flex flex-col space-y-4 z-10">
-        <a
-          href="#"
-          className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
-        >
-          <Twitter className="w-5 h-5 text-white" />
-        </a>
-        <a
-          href="#"
-          className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
-        >
-          <MessageCircle className="w-5 h-5 text-white" />
-        </a>
-        <a
-          href="#"
-          className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
-        >
-          <Github className="w-5 h-5 text-white" />
-        </a>
-        <a
-          href="#"
-          className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
-        >
-          <Facebook className="w-5 h-5 text-white" />
-        </a>
-        <a
-          href="#"
-          className="w-12 h-12 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors"
-        >
-          <Instagram className="w-5 h-5 text-white" />
-        </a>
-      </div>
+      <SocialBar />
     </div>
   );
 };

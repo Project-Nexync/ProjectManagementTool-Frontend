@@ -67,11 +67,11 @@ export default function FeaturesPage() {
 
       {/* Main Features Content */}
       <div className="flex flex-col items-center px-4 pt-20">
-        <h1 className="text-4xl md:text-5xl font-light text-white mb-8 text-center pt-8">
+        <h1 className="text-4xl md:text-5xl font-light text-white mb-8 text-center pt-4">
           what's <span className="text-blue-400 font-normal">exciting</span> ?
         </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-7xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 w-full max-w-7xl">
           {featuresWithImages.map((feature, idx) => (
             <FeatureCard
               key={idx}

@@ -56,7 +56,7 @@ export default function About() {
 
       {/* Main Content */}
   <div className="flex flex-col lg:flex-row gap-40 px-4 py-16 max-w-[90rem] lg:ml-40 pt-40">
-      
+
         {/* Left Side - Brand Description */}
         <div className="lg:w-1/2 space-y-6">
           <img src={Logo} alt="Nexync Logo" className="h-32 mb-1" />
@@ -104,7 +104,7 @@ export default function About() {
               >
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-700/30 transition-colors"
+                  className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-700/30 transition-colors"
                 >
                   <span className="text-gray-300 font-medium pr-4">
                     {faq.question.split("Nexync").map((part, i, arr) => (

@@ -2,7 +2,7 @@ import React from "react";
 
 const variants = {
   primary:
-    "bg-gradient-to-t from-white/20 to-transparent border border-white text-white hover:bg-gradient-to-t hover:from-[#1C89EF]/20 hover:to-transparent hover:border-[#447EB8] hover:text-[#82C2FF]",
+    "bg-gradient-to-t from-white/20 to-transparent border border-gray-500 text-white hover:bg-gradient-to-t hover:from-[#1C89EF]/20 hover:to-transparent hover:border-[#447EB8] hover:text-[#82C2FF]",
   secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
   danger: "bg-red-500 text-white hover:bg-red-600",
 };
