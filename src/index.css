@@ -9,8 +9,17 @@
   font-display: swap;
 }
 
+/* Thin font */
+@font-face {
+  font-family: 'HelveticaThin';
+  src: url('./assets/fonts/HelveticaNeueThin.otf') format('opentype');
+  font-weight: 200; /* Thin */
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: 'Helvetica', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica','HelaveticaThin', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

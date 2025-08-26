@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import Features from "./pages/Features"; // import your Features page
+import Features from "./pages/features"; // import your Features page
 // import Dashboard from "./pages/Dashboard"; // if you have it
 import About from "./pages/about"; // if you have it
 

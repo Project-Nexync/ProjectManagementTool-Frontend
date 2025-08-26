@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import { Plus, Minus, Twitter, MessageCircle, Github, Facebook, Instagram } from "lucide-react"
-import { Button } from "../components/ui/button"
-import { Link } from "react-router-dom"
+import { Button } from "../components/loginButton"
 import Navbar from "../components/navbar"
 import backgroundImage from "../assets/bg-screen.png";
-
-
+import SocialBar from "../components/socialMedia"
+import Logo from '../assets/nexync.png';
+import React from "react"
 
 const faqData = [
   {
@@ -35,33 +35,33 @@ const faqData = [
     answer:
       "Yes, Nexync is designed to be simple for anyone to use, yet powerful enough to manage even the most complex workflows. It works perfectly for both academic projects and professional enterprise-level work.",
   },
-]
+];
 
-export default function AboutPage() {
-  const [expandedFaq, setExpandedFaq] = useState(null) // default null or 2 if you want third open
+export default function About() {
+  const [expandedFaq, setExpandedFaq] = useState(null)
 
-const toggleFaq = (index) => {
-  setExpandedFaq(expandedFaq === index ? null : index)
-}
-
+  const toggleFaq = (index) => {
+    setExpandedFaq(expandedFaq === index ? null : index)
+  }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className="relative min-h-screen w-screen overflow-hidden">
       {/* Full-screen background image */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
+
       <Navbar />
 
       {/* Main Content */}
-      <div className="flex flex-col lg:flex-row gap-12 px-6 py-12 max-w-7xl mx-auto pt-20">
+      <div className="flex flex-col lg:flex-row gap-40 px-2 py-16 max-w-[90rem] ml-40 pt-40">
 
         {/* Left Side - Brand Description */}
-        <div className="lg:w-1/2 space-y-8">
-         
-          {/* Description Paragraphs */}
-          <div className="space-y-6 text-gray-300 leading-relaxed">
+        <div className="lg:w-1/2 space-y-6">
+          <img src={Logo} alt="Nexync Logo" className="h-32 mb-1" />
+
+          <div className="space-y-6 text-gray-300 leading-loose mt-2">
             <p>
               <span className="text-blue-400 font-medium">Bring clarity to your team's chaos with Nexync</span>, an
               all-in-one project management platform built for the next generation of work. From intelligent task
@@ -86,26 +86,17 @@ const toggleFaq = (index) => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex gap-4 pt-8">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg transition-colors">
-              register now
-              <div className="text-xs text-blue-200 mt-1">to get started</div>
-            </Button>
-            <Button
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-3 rounded-lg transition-colors bg-transparent"
-            >
-              login
-              <div className="text-xs text-gray-400 mt-1">and let's go</div>
-            </Button>
+          <div className="flex gap-8 pt-8">
+            <Button title="Register Now" subtitle="to get started" />
+            <Button title="Login" subtitle="and let's go" />
           </div>
         </div>
 
         {/* Right Side - FAQ */}
-        <div className="lg:w-1/2">
-          <h2 className="text-white text-2xl font-bold mb-8">FAQ</h2>
+        <div className="lg:w-1/2 space-y-4">
+          <h2 className="text-[#B5B5B5] text-2xl font-bold mb-4 mt-8">FAQ</h2>
 
-          <div className="space-y-4">
+          <div className="space-y-12">
             {faqData.map((faq, index) => (
               <div
                 key={index}
@@ -116,13 +107,12 @@ const toggleFaq = (index) => {
                   className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-700/30 transition-colors"
                 >
                   <span className="text-gray-300 font-medium pr-4">
-                    {faq.question.replace("Nexync", "")}
-                    <span className="text-blue-400">Nexync</span>
-                    {faq.question.includes("different from") && " different from other project management tools?"}
-                    {faq.question.includes("different roles") && " projects?"}
-                    {faq.question.includes("AI task") && "'s AI task suggestion feature work?"}
-                    {faq.question.includes("notified") && " if a deadline is approaching?"}
-                    {faq.question.includes("suitable") && " suitable for academic or professional projects?"}
+                    {faq.question.split("Nexync").map((part, i, arr) => (
+                      <React.Fragment key={i}>
+                        {part}
+                        {i < arr.length - 1 && <span className="text-blue-400">Nexync</span>}
+                      </React.Fragment>
+                    ))}
                   </span>
                   {expandedFaq === index ? (
                     <Minus className="w-5 h-5 text-blue-400 flex-shrink-0" />
@@ -143,23 +133,7 @@ const toggleFaq = (index) => {
       </div>
 
       {/* Social Media Icons */}
-      <div className="fixed right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-4">
-        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-          <Twitter className="w-5 h-5 text-white" />
-        </div>
-        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-          <MessageCircle className="w-5 h-5 text-white" />
-        </div>
-        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-          <Github className="w-5 h-5 text-white" />
-        </div>
-        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-          <Facebook className="w-5 h-5 text-white" />
-        </div>
-        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer">
-          <Instagram className="w-5 h-5 text-white" />
-        </div>
-      </div>
+      <SocialBar />
     </div>
   )
 }
