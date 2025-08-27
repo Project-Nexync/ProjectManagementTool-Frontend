@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { Plus, Minus, Twitter, MessageCircle, Github, Facebook, Instagram } from "lucide-react"
 import { Button } from "../components/loginButton"
+import SignUpModal from "../components/SignUpModal";
+import SignInModal from "../components/SignInModal";
 import Navbar from "../components/navbar"
 import backgroundImage from "../assets/bg-screen.png";
 import SocialBar from "../components/socialMedia"
@@ -37,12 +39,15 @@ const faqData = [
   },
 ];
 
+
 export default function About() {
-  const [expandedFaq, setExpandedFaq] = useState(null)
+  const [expandedFaq, setExpandedFaq] = useState(null);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   const toggleFaq = (index) => {
-    setExpandedFaq(expandedFaq === index ? null : index)
-  }
+    setExpandedFaq(expandedFaq === index ? null : index);
+  };
 
   return (
     <div className="relative min-h-screen w-screen overflow-hidden">
@@ -87,8 +92,8 @@ export default function About() {
 
           {/* CTA Buttons */}
           <div className="flex gap-8 pt-8">
-            <Button title="Register Now" subtitle="to get started" />
-            <Button title="Login" subtitle="and let's go" />
+            <Button title="Register Now" subtitle="to get started" onClick={() => setShowSignUp(true)} />
+            <Button title="Login" subtitle="and let's go" onClick={() => setShowSignIn(true)} />
           </div>
         </div>
 
@@ -132,8 +137,26 @@ export default function About() {
         </div>
       </div>
 
-      {/* Social Media Icons */}
-      <SocialBar />
+  {/* Social Media Icons */}
+  <SocialBar />
+  {showSignUp && (
+    <SignUpModal 
+      onClose={() => setShowSignUp(false)} 
+      onSwitchToSignIn={() => {
+        setShowSignUp(false);
+        setShowSignIn(true);
+      }}
+    />
+  )}
+  {showSignIn && (
+    <SignInModal 
+      onClose={() => setShowSignIn(false)} 
+      onSwitchToSignUp={() => {
+        setShowSignIn(false);
+        setShowSignUp(true);
+      }}
+    />
+  )}
     </div>
   )
 }

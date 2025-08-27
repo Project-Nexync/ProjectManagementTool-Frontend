@@ -2,9 +2,14 @@ import Navbar from "../components/navbar"
 import backgroundImage from "../assets/bg-screen.png"
 import Logo from '../assets/nexync.png';
 import { Button } from "../components/loginButton"
+import { useState } from "react";
+import SignUpModal from "../components/SignUpModal";
+import SignInModal from "../components/SignInModal";
 import SocialBar from "../components/socialMedia";
 
 const LandingPage = () => {
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
   return (
     <div className="relative min-h-screen">
       {/* Full-screen background image */}
@@ -42,17 +47,45 @@ const LandingPage = () => {
             {/* Register column */}
             <div className="flex flex-col items-center w-56">
               <span className="mb-2 text-base text-[#bfcbe0]">first time visiting here ?</span>
-              <Button title="register now" subtitle="to get started" className="w-3/4" />
+              <Button
+                title="register now"
+                subtitle="to get started"
+                className="w-3/4"
+                onClick={() => setShowSignUp(true)}
+              />
             </div>
             {/* Login column */}
             <div className="flex flex-col items-center w-56">
               <span className="mb-2 text-base text-[#bfcbe0]">been here before ?</span>
-              <Button title="login" subtitle="and let's go" className="w-3/4" />
+              <Button 
+              title="login" 
+              subtitle="and let's go" 
+              className="w-3/4"
+              onClick={() => setShowSignIn(true)}
+               />
             </div>
           </div>
         </div>
       </div>
-      <SocialBar />
+  <SocialBar />
+  {showSignUp && (
+    <SignUpModal 
+      onClose={() => setShowSignUp(false)} 
+      onSwitchToSignIn={() => {
+        setShowSignUp(false);
+        setShowSignIn(true);
+      }}
+    />
+  )}
+  {showSignIn && (
+    <SignInModal 
+      onClose={() => setShowSignIn(false)} 
+      onSwitchToSignUp={() => {
+        setShowSignIn(false);
+        setShowSignUp(true);
+      }}
+    />
+  )}
     </div>
   );
 };
