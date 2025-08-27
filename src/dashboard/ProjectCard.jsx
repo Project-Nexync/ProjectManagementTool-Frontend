@@ -17,7 +17,7 @@ function ProjectCard({
   completed = 0,
   total = 0,
 }) {
-  // Ensure progress is a valid number between 0 and 100, and always show a minimum width for visibility
+
   let safeProgress = typeof progress === 'number' && !isNaN(progress) ? Math.max(0, Math.min(100, progress)) : 0;
   // For very small progress, show at least 2% width if progress > 0
   let barWidth = safeProgress > 0 && safeProgress < 2 ? 2 : safeProgress;
