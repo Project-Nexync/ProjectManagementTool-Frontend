@@ -4,7 +4,7 @@ import DateTimeDisplay from "./DateTimeDisplay";
 
 export default function Sidebar() {
   return (
-    <aside className="w-80 bg-transparent shadow-2xl text-white flex flex-col p-6">
+    <aside className="w-60 bg-transparent shadow-2xl text-white flex flex-col p-6">
       <Logo />
       <DateTimeDisplay />
       <button className="mt-6 bg-[#2ecc40] text-black font-bold py-3 rounded-lg text-lg">+ Start New Project</button>
