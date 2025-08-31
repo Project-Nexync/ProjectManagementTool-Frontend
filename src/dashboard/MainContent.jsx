@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TopNav from './TopNav';
+import TopNav from '../components/DashboardNav';
 import ProjectCardsGrid from './ProjectCardsGrid';
 import CalendarPanel from './CalendarPanel';
 import TaskCompletionChart from './TaskCompletionChart';
