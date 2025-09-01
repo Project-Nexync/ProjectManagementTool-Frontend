@@ -1,64 +1,48 @@
 import React from "react";
 import DashboardNav from "../components/DashboardNav";
 import ProjectSidebar from "./ProjectSidebar";
-import ProjectMainContent from "./ProjectMainContent";
+import ProjectMainContent from "./MainContent";
+import TaskTable from "./TaskTable";
 import backgroundImage from "../assets/bg-screen.png";
+import TaskCompletionChart from "./ProjectTaskCompletionChart";
+import ChatContainer from "./ChatContainer";
 
 export default function ProjectDashboard() {
-  // Placeholder for add task modal logic if needed
-  // const [showCreate, setShowCreate] = useState(false);
   return (
     <div
       className="min-h-screen w-full bg-[#0a1834]"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 pt-4">
-        {/* Left Sidebar: Logo at the very top */}
-        <aside className="col-span-12 lg:col-span-2 bg-transparent shadow-2xl text-white flex flex-col px-4 min-h-[80vh]">
+      {/* 12-col master grid drives the whole page placement */}
+  <div className="relative grid grid-cols-14 gap-x-6 gap-y-0 px-8 pt-4">
+        {/* Row 1: Sidebar, Navbar, Project header, Chart/Chat */}
+  <div className="col-span-2 flex flex-col">
           <ProjectSidebar />
-        </aside>
-        {/* Middle + Right: DashboardNav spans both */}
-        <div className="col-span-12 lg:col-span-10 flex flex-col gap-6">
-          <div className="w-full">
-            <DashboardNav />
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 w-full">
-            {/* Middle: Project Header & Table */}
-            <section className="col-span-10 lg:col-span-7 flex flex-col">
+        </div>
+  <div className="col-span-12 flex flex-col gap-6">
+          <DashboardNav />
+          <div className="grid grid-cols-12 gap-6 w-full">
+            {/* Left Section: Project header */}
+            <section className="col-span-9 flex flex-col gap-4">
               <ProjectMainContent />
             </section>
-            {/* Right: Chart & Chat */}
-            <section className="col-span-10 lg:col-span-3 flex flex-col gap-6 w-full lg:w-[400px]">
+            {/* Right Section: Completion + Chat */}
+            <section className="col-span-3 flex flex-col gap-6">
               {/* Completion Chart */}
-              <div className="bg-[#12244a] rounded-xl p-4 shadow-lg flex flex-col items-center">
-                <div className="text-white font-bold mb-2">Overall Task Completion</div>
-                <div className="w-40 h-40 bg-[#1e293b] rounded-full flex items-center justify-center">
-                  {/* Insert chart component here */}
-                  <span className="text-blue-400 font-bold">[Chart]</span>
-                </div>
-              </div>
-              {/* Chat */}
-              <div className="bg-[#12244a] rounded-xl p-4 shadow-lg flex flex-col h-[260px]">
-                <div className="text-white font-bold mb-2">Website Redesign Project</div>
-                <div className="flex-1 overflow-y-auto bg-[#1e293b] rounded-lg p-2 mb-2">
-                  {/* Example chat messages */}
-                  <div className="text-blue-400 text-sm mb-1">Hi team <span className="float-right text-xs text-gray-400">11:31 AM</span></div>
-                  <div className="text-blue-400 text-sm mb-1">How's the work going ? <span className="float-right text-xs text-gray-400">11:31 AM</span></div>
-                  <div className="text-white text-sm mb-1">John <span className="float-right text-xs text-gray-400">11:35 AM</span></div>
-                  <div className="text-gray-200 text-sm mb-1">Currently working on SEO</div>
-                  <div className="text-white text-sm mb-1">@Kalis can u help it <span className="float-right text-xs text-gray-400">11:35 AM</span></div>
-                  <div className="text-white text-sm mb-1">Kalis <span className="float-right text-xs text-gray-400">11:35 AM</span></div>
-                  <div className="text-gray-200 text-sm mb-1">Sure ! I am into it.</div>
-                </div>
-                <input className="bg-[#D9D9D923] text-white px-4 py-2 rounded-4xl w-full border border-zinc-400" placeholder="Start typing..." />
-              </div>
+              <TaskCompletionChart/>
+              {/* Project Chat (real-time, project-specific) */}
+              <ChatContainer projectId={"project-unique-id"} user={{ id: "user-1", name: "John Doe" }} />
             </section>
           </div>
+        </div>
+        {/* Row 2: TaskTable with absolute positioning and negative top value */}
+        <div className="absolute left-8 col-span-9 w-[72%] flex top-76 z-20">
+          <TaskTable />
         </div>
       </div>
     </div>
