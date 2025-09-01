@@ -4,7 +4,8 @@ import ProjectCardsGrid from './ProjectCardsGrid';
 import CalendarPanel from './CalendarPanel';
 import TaskCompletionChart from './TaskCompletionChart';
 import WorkloadHeatmapModal from './WorkloadHeatmapModal';
-import { MdOutlineAutoGraph } from "react-icons/md";
+import { VscGraph } from "react-icons/vsc";
+
 export default function MainContent() {
   const [user] = useState({ profilePic: null });
   const [section, setSection] = useState('ongoing'); // 'ongoing', 'completed', 'all'
@@ -42,7 +43,7 @@ export default function MainContent() {
             transition-all duration-150"
             onClick={() => setShowHeatmap(true)}
           >
-            <MdOutlineAutoGraph className="w-5 h-5" />
+            <VscGraph className="w-5 h-5" />
             <span>View Personal Workload Heatmap</span>
           </button>
           <TaskCompletionChart />
