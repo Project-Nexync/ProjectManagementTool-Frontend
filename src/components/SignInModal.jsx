@@ -1,11 +1,52 @@
 import React, { useState } from "react";
 import NexyncLogo from "../assets/nexync.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../API.jsx";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function SignInModal({ onClose, onSwitchToSignUp }) {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  // Handle form submission
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    setError("Please enter both email and password");
+    return;
+  }
+
+  setLoading(true);
+  setError("");
+
+  try {
+    const response = await api.post("/auth/login", {
+      email,
+      password,
+    });
+
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      onClose();
+      navigate("/dashboard");
+    } else {
+      setError("Login failed. Please check your credentials.");
+    }
+  } catch (err) {
+    console.error("Error during login:", err);
+    setError("Something went wrong. Please try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -37,17 +78,18 @@ function SignInModal({ onClose, onSwitchToSignUp }) {
         </div>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[#666666] ml-1 font-sans select-none">Email</label>
             <input
               className="w-full border rounded-lg border-gray-300 px-4 py-2 placeholder-gray-400 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[#1C89EF]"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder=""
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
               type="email"
               autoComplete="email"
+              required
             />
           </div>
 
@@ -58,19 +100,23 @@ function SignInModal({ onClose, onSwitchToSignUp }) {
               <input
                 className="w-full border rounded-lg border-gray-300 px-4 py-2 placeholder-gray-400 text-gray-700 bg-white pr-10 focus:outline-none focus:ring-2 focus:ring-[#1C89EF]"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder=""
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
+                required
               />
               <span
-                onClick={() => setShowPassword(v => !v)}
+                onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 text-lg select-none flex items-center gap-1"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />} <span className="text-xs ml-1">{showPassword ? "Hide" : "Show"}</span>
               </span>
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && <div className="text-red-600 text-sm text-center">{error}</div>}
 
           {/* Terms */}
           <div className="text-xs text-gray-700 mt-2 mb-2">
@@ -83,8 +129,9 @@ function SignInModal({ onClose, onSwitchToSignUp }) {
           <button
             type="submit"
             className="w-full bg-[#0076FF] hover:bg-[#0063D1] text-white rounded-full py-3 text-lg font-semibold shadow transition-colors duration-150"
+            disabled={loading}
           >
-            Sign in
+            {loading ? "Signing in..." : "Sign in"}
           </button>
 
           {/* Sign up link */}
