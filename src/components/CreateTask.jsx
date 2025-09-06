@@ -5,7 +5,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { RiAiGenerate2 } from "react-icons/ri";
 import { useParams } from "react-router-dom";
-import api from "../API.jsx"; // Axios instance
+import api from "../API.jsx"; 
 
 export default function CreateTask({ onFinish }) {
   const { projectId } = useParams();
@@ -70,13 +70,26 @@ export default function CreateTask({ onFinish }) {
 
   const handleFinish = async () => {
     const payload = {
-      tasks: tasks.map((t) => ({
-        taskName: t.task,
-        status: "Pending",
-        fileAttachment: t.fileAttachment || "", // optional
-        dueDate: t.endDate,
-        assignedMembers: t.assignees.map((a) => a.username),
-      })),
+      tasks: tasks.map((t) => {
+        let dueDateTime = null;
+        if (t.endDate && t.endTime) {
+          // Combine date and time into one Date object
+          const date = new Date(t.endDate);
+          const time = new Date(t.endTime);
+          date.setHours(time.getHours());
+          date.setMinutes(time.getMinutes());
+          date.setSeconds(time.getSeconds());
+          dueDateTime = date.toISOString(); // send as ISO string
+        }
+
+        return {
+          taskName: t.task,
+          status: "Pending",
+          fileAttachment: t.fileAttachment || "", // optional
+          dueDate: dueDateTime,
+          assignedMembers: t.assignees.map((a) => a.username),
+        };
+      }),
     };
 
     try {

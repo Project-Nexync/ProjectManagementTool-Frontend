@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { IoFilter } from "react-icons/io5";
-import api from "../API.jsx"; // your axios instance
+import api from "../API.jsx"; 
 
 const statusOptions = ["Pending", "Ongoing", "Completed"];
 
 export default function TaskTable() {
-  const { projectId } = useParams(); // get projectId from URL
+  const { projectId } = useParams(); 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,8 +16,8 @@ export default function TaskTable() {
   const [sortAsc, setSortAsc] = useState(true);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
   const [showAssigneeFilter, setShowAssigneeFilter] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState(null);
 
-  // Fetch project tasks
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -33,13 +33,11 @@ export default function TaskTable() {
     fetchTasks();
   }, [projectId]);
 
-  // Extract assignee names for filter
   const assigneeOptions = [
     "All",
     ...Array.from(new Set(tasks.map(t => t.assigned_to?.toString()).filter(Boolean)))
   ];
 
-  // Map tasks for table
   const mappedTasks = tasks.map(task => ({
     id: task.task_id,
     task: task.task_name,
@@ -49,19 +47,16 @@ export default function TaskTable() {
     attachments: task.attachments || "-"
   }));
 
-  // Filter tasks
   const filteredTasks = mappedTasks.filter(task => {
     const statusMatch = statusFilter === "All" || task.status === statusFilter;
     const assigneeMatch = assigneeFilter === "All" || task.assignees.includes(assigneeFilter);
     return statusMatch && assigneeMatch;
   });
 
-  // Sort tasks by deadline
   const sortedTasks = [...filteredTasks].sort((a, b) =>
     sortAsc ? new Date(a.deadline) - new Date(b.deadline) : new Date(b.deadline) - new Date(a.deadline)
   );
 
-  // Update task progress
   const updateStatus = async (taskId, newStatus) => {
     try {
       await api.put(`/edit/${projectId}/progress/${taskId}`, { progress: newStatus });
@@ -72,7 +67,6 @@ export default function TaskTable() {
     }
   };
 
-  // Close dropdowns on click outside
   useEffect(() => {
     function handleClick(e) {
       if (!e.target.closest(".status-filter-dropdown")) setShowStatusFilter(false);
@@ -181,7 +175,7 @@ export default function TaskTable() {
                         ? "bg-green-700 text-white"
                         : task.status === "Ongoing"
                         ? "bg-blue-700 text-white"
-                        : "bg-yellow-600 text-white" // Pending
+                        : "bg-yellow-600 text-white"
                     }`}
                     value={task.status}
                     onChange={e => updateStatus(task.id, e.target.value)}
@@ -191,9 +185,41 @@ export default function TaskTable() {
                     ))}
                   </select>
                 </td>
-                <td className="py-2 px-2">
-                  {new Date(task.deadline).toLocaleDateString()} <br />
-                  {new Date(task.deadline).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/am|pm/i, m => m.toUpperCase())}
+                {/* Editable deadline with date and time in separate lines */}
+                <td className="py-2 px-2" onClick={() => setEditingTaskId(task.id)}>
+                  {editingTaskId === task.id ? (
+                    <input
+                      type="datetime-local"
+                      autoFocus
+                      className="border px-1 py-0.5 rounded text-black text-sm w-full"
+                      defaultValue={task.deadline ? new Date(task.deadline).toISOString().slice(0, 16) : ""}
+                      onBlur={async e => {
+                        const newDueDate = e.target.value;
+                        try {
+                          await api.put(`/edit/${projectId}/duedate/${task.id}`, {
+                            duedate: newDueDate.replace("T", " ")
+                          });
+                          setTasks(prev =>
+                            prev.map(t =>
+                              t.id === task.id ? { ...t, deadline: new Date(newDueDate) } : t
+                            )
+                          );
+                        } catch (err) {
+                          console.error("Failed to update due date", err);
+                          alert("Failed to update due date");
+                        } finally {
+                          setEditingTaskId(null);
+                        }
+                      }}
+                    />
+                  ) : task.deadline ? (
+                    <div>
+                      <div>{new Date(task.deadline).toLocaleDateString()}</div>
+                      <div>{new Date(task.deadline).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/am|pm/i, m => m.toUpperCase())}</div>
+                    </div>
+                  ) : (
+                    "-"
+                  )}
                 </td>
                 <td className="py-2 px-2">
                   <div className="flex -space-x-2">
