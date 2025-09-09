@@ -55,7 +55,7 @@ const LandingPage = () => {
               />
             </div>
             {/* Login column */}
-            <div className="flex flex-col items-center w-56">
+            <div className="flex flex-col items-center w-57">
               <span className="mb-2 text-base text-[#bfcbe0]">been here before ?</span>
               <Button 
               title="login" 
