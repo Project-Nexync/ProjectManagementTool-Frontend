@@ -1,14 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Minus, Twitter, MessageCircle, Github, Facebook, Instagram } from "lucide-react"
+import { Plus, Minus } from "lucide-react"
 import { Button } from "../components/loginButton"
 import SignUpModal from "../components/SignUpModal";
 import SignInModal from "../components/SignInModal";
 import Navbar from "../components/navbar"
 import backgroundImage from "../assets/bg-screen.png";
 import SocialBar from "../components/socialMedia"
-import Logo from '../assets/nexync.png';
 import React from "react"
 
 const faqData = [
@@ -39,7 +38,6 @@ const faqData = [
   },
 ];
 
-
 export default function About() {
   const [expandedFaq, setExpandedFaq] = useState(null);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -50,8 +48,8 @@ export default function About() {
   };
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden">
-      {/* Full-screen background image */}
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* Background */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
         style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -60,48 +58,36 @@ export default function About() {
       <Navbar />
 
       {/* Main Content */}
-  <div className="flex flex-col lg:flex-row gap-40 px-2 py-16 max-w-[90rem] lg:ml-40 pt-40">
+      <div className="flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-24 px-4 py-28 max-w-[90rem] mx-auto"> 
+      {/* Added py-28 to prevent overlap with Navbar */}
 
         {/* Left Side - Brand Description */}
-        <div className="lg:w-1/2 space-y-6">
-          <img src={Logo} alt="Nexync Logo" className="h-32 mb-1" />
+        <div className="lg:w-1/2 flex flex-col justify-start space-y-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-400 mb-4">
+            About Us
+          </h1>
 
-          <div className="space-y-6 text-gray-300 leading-loose mt-2">
+          <div className="space-y-4 text-gray-300 leading-relaxed text-sm sm:text-base text-left lg:text-justify">
             <p>
-              <span className="text-blue-400 font-medium">Bring clarity to your team's chaos with Nexync</span>, an
-              all-in-one project management platform built for the next generation of work. From intelligent task
-              allocation and Google Calendar sync to real-time dashboards and workload heatmaps, Nexync gives your team
-              the tools to stay aligned, meet deadlines, and deliver results.
+              Bring clarity to your team's chaos with Nexync, an all-in-one project management platform built for the next generation of work. From intelligent task allocation and Google Calendar sync to real-time dashboards and workload heatmaps, Nexync gives your team the tools to stay aligned, meet deadlines, and deliver results.
             </p>
 
             <p>
-              Designed to be{" "}
-              <span className="text-blue-400 font-medium">
-                simple for anyone to use, yet powerful enough to manage even the most complex workflows
-              </span>
-              , Nexync combines user-friendliness with enterprise-level functionality. No more juggling between
-              spreadsheets, chat apps, and reminders — everything you need to manage your projects lives in one place.
+              Designed to be simple for anyone to use, yet powerful enough to manage even the most complex workflows, Nexync combines user-friendliness with enterprise-level functionality. No more juggling between spreadsheets, chat apps, and reminders - everything you need to manage your projects lives in one place.
             </p>
 
             <p>
-              Nexync supports <span className="text-blue-400 font-medium">dynamic team structures</span>, allowing role
-              flexibility per project. Whether you're a student team, a growing startup, or a large distributed
-              organization, Nexync adapts to your needs — not the other way around.
+              Nexync supports dynamic team structures, allowing role flexibility per project. Whether you're a student team, a growing startup, or a large distributed organization, Nexync adapts to your needs - not the other way around.
             </p>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex gap-8 pt-8">
-            <Button title="Register Now" subtitle="to get started" onClick={() => setShowSignUp(true)} />
-            <Button title="Login" subtitle="and let's go" onClick={() => setShowSignIn(true)} />
-          </div>
         </div>
 
         {/* Right Side - FAQ */}
-        <div className="lg:w-1/2 space-y-4">
-          <h2 className="text-[#B5B5B5] text-2xl font-bold mb-4 mt-8">FAQ</h2>
+        <div className="lg:w-1/2 flex flex-col space-y-4 lg:pr-40"> {/* Avoid overlapping SocialBar */}
+          <h2 className="text-[#B5B5B5] text-2xl font-bold mb-4 mt-0 sm:mt-0">FAQ</h2> {/* Align top with About Us */}
 
-          <div className="space-y-12">
+          <div className="space-y-6 sm:space-y-8">
             {faqData.map((faq, index) => (
               <div
                 key={index}
@@ -109,7 +95,7 @@ export default function About() {
               >
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-slate-700/30 transition-colors"
+                  className="w-full flex items-center justify-between p-4 sm:p-6 text-left hover:bg-slate-700/30 transition-colors"
                 >
                   <span className="text-gray-300 font-medium pr-4">
                     {faq.question.split("Nexync").map((part, i, arr) => (
@@ -127,8 +113,8 @@ export default function About() {
                 </button>
 
                 {expandedFaq === index && (
-                  <div className="px-4 pb-4">
-                    <p className="text-gray-400 leading-relaxed">{faq.answer}</p>
+                  <div className="px-4 pb-4 sm:px-6">
+                    <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{faq.answer}</p>
                   </div>
                 )}
               </div>
@@ -137,26 +123,12 @@ export default function About() {
         </div>
       </div>
 
-  {/* Social Media Icons */}
-  <SocialBar />
-  {showSignUp && (
-    <SignUpModal 
-      onClose={() => setShowSignUp(false)} 
-      onSwitchToSignIn={() => {
-        setShowSignUp(false);
-        setShowSignIn(true);
-      }}
-    />
-  )}
-  {showSignIn && (
-    <SignInModal 
-      onClose={() => setShowSignIn(false)} 
-      onSwitchToSignUp={() => {
-        setShowSignIn(false);
-        setShowSignUp(true);
-      }}
-    />
-  )}
+      {/* Social Media Icons */}
+      <div className="absolute top-1/4 right-0 z-10">
+        <SocialBar />
+      </div>
+
+      
     </div>
   )
 }
