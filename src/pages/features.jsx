@@ -1,13 +1,13 @@
+import React from "react";
 import FeatureCard from "../components/featureCard";
 import Navbar from "../components/navbar";
 import backgroundImage from "../assets/bg-screen.png";
 import SocialBar from "../components/socialMedia";
-import React from "react";
 
 // Load all images in the features folder
 const images = import.meta.glob('../assets/featurespage/*.{png,jpg,svg}', { eager: true });
 
-// Create a map: filename → URL
+// Map: filename → URL
 const imagesMap = {};
 Object.entries(images).forEach(([path, module]) => {
   const filename = path.split('/').pop(); // e.g., "1.png"
@@ -28,13 +28,12 @@ const features = [
   {
     title: "Interactive progress dashboards",
     description:
-     "Track overall project health with visual dashboards. Monitor task completion, deadline adherence, and performance trends in real-time to stay ahead of delays.  Ensure resource allocation aligns with project goals for top efficiency.",
+     "Track overall project health with visual dashboards. Monitor task completion, deadline adherence, and performance trends in real-time to stay ahead of delays. Ensure resource allocation aligns with project goals for top efficiency.",
   },
   {
     title: "Deadline reminders via e-mail",
     description:
       "Nexync automatically sends timely email reminders for upcoming task deadlines, overdue items, and important project milestones. These reminders are personalized for each team member based on their task assignments.",
-
   },
   {
     title: "Google calendar auto-sync",
@@ -44,7 +43,7 @@ const features = [
   {
     title: "Personal workload managing",
     description:
-      "Nexync gives each user a clear overview of their current tasks, deadlines, and priority levell,all in one place. Combined with visual indicators and calendar views, this feature empowers users to  stay focused on what matters most.",
+      "Nexync gives each user a clear overview of their current tasks, deadlines, and priority level, all in one place. Combined with visual indicators and calendar views, this feature empowers users to stay focused on what matters most.",
   },
 ];
 
@@ -53,11 +52,10 @@ const featuresWithImages = features.map((feature, idx) => ({
   imageSrc: imagesMap[`${idx + 1}.png`],
 }));
 
-
 export default function FeaturesPage() {
   return (
-    <div className="relative min-h-screen w-full">
-      {/* Full-screen background image */}
+    <div className="relative min-h-screen w-full overflow-x-hidden">
+      {/* Background */}
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
         style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -65,25 +63,32 @@ export default function FeaturesPage() {
 
       <Navbar />
 
-      {/* Main Features Content */}
-      <div className="flex flex-col items-center px-4 pt-20">
-        <h1 className="text-4xl md:text-5xl font-light text-white mb-8 text-center pt-4">
-          what's <span className="text-blue-400 font-normal">exciting</span> ?
-        </h1>
+      {/* Main Content */}
+          <div className="flex flex-col items-center px-4 pt-20">
+            {/* Centered Heading */}
+           <h1 className="text-4xl md:text-6xl font-light text-white mb-6 text-center transform -translate-x-14">
+            What's <span className="text-blue-400 font-normal">Exciting</span>?
+          </h1>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 w-full max-w-7xl">
-          {featuresWithImages.map((feature, idx) => (
-            <FeatureCard
-              key={idx}
-              title={feature.title}
-              imageSrc={feature.imageSrc}
-              description={feature.description}
-            />
-          ))}
-        </div>
+
+            {/* Centered Grid with reduced horizontal gap and increased vertical gap */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 justify-center w-full max-w-7xl">
+              {featuresWithImages.map((feature, idx) => (
+                <FeatureCard
+                  key={idx}
+                  title={feature.title}
+                  imageSrc={feature.imageSrc}
+                  description={feature.description}
+                />
+              ))}
+            </div>
+
+
 
         {/* Social Media Icons */}
-        <SocialBar />
+        <div className="mt-6">
+          <SocialBar />
+        </div>
       </div>
     </div>
   );

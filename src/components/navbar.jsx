@@ -24,10 +24,10 @@
 
           {/* Center Menu */}
           <div className="absolute left-1/2 transform -translate-x-1/2 font-helvetica hidden md:flex space-x-20 text-[#C4C6C8]">
-            <Link to="/" className="hover:text-[#1C89EF]">home</Link>
-            <Link to="/dashboard" className="hover:text-[#1C89EF]">dashboard</Link>
-            <Link to="/features" className="hover:text-[#1C89EF]">features</Link>
-            <Link to="/about" className="hover:text-[#1C89EF]">about</Link>
+            <Link to="/" className="hover:text-[#1C89EF]">Home</Link>
+            {/* <Link to="/dashboard" className="hover:text-[#1C89EF]">Dashboard</Link> */}
+            <Link to="/features" className="hover:text-[#1C89EF]">Features</Link>
+            <Link to="/about" className="hover:text-[#1C89EF]">About</Link>
           </div>
 
           {/* Right Section */}
@@ -48,22 +48,22 @@
               </button>
             </div>
 
-            {/* Profile Picture */}
+            {/* Profile Picture
             <img
               src={profilePic}
               alt="User Profile"
               className="h-10 w-10 rounded-full object-cover border border-blue-600"
-            />
+            /> */}
           </div>
           </div>  
 
         {/* Mobile Menu */}
         {isOpen && (
           <div className="md:hidden px-2 pt-0 pb-1 space-y-0 bg-transparent shadow-md text-[#C4C6C8]">
-            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">home</a>
-            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">dashboard</a>
-            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">features</a>
-            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">about</a>
+            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Home</a>
+            {/* <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Dashboard</a> */}
+            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Features</a>
+            <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">About</a>
           </div>
         )}
       </nav>
