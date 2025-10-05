@@ -53,6 +53,7 @@ export default function ProjectDashboard() {
         </div>
 
         {/* Main Content */}
+        
         <div className="col-span-12 flex flex-col gap-6">
           <DashboardNav />
           <div className="grid grid-cols-12 gap-6 w-full">
@@ -69,12 +70,12 @@ export default function ProjectDashboard() {
               {/* Workload Visualization Button */}
               <button
                 className="
-                  flex items-center justify-center gap-2 
-                  bg-[#9D1C1D] text-[#FFB7B7] 
-                  rounded-lg py-2 px-4 
-                  shadow-[0_4px_0_#6b1010,0_6px_12px_rgba(0,0,0,0.4)] 
-                  hover:translate-y-[1px] hover:shadow-[0_2px_0_#6b1010,0_4px_8px_rgba(0,0,0,0.4)] 
-                  active:translate-y-[2px] active:shadow-[0_0px_0_#6b1010,0_2px_4px_rgba(0,0,0,0.4)]
+                  flex items-center justify-center gap-2
+                  bg-[#1452D5] text-white
+                  rounded-lg py-2 px-4
+                  shadow-[0_4px_0_#0f3eb4,0_6px_12px_rgba(0,0,0,0.3)]
+                  hover:translate-y-[1px] hover:shadow-[0_2px_0_#0f3eb4,0_4px_8px_rgba(0,0,0,0.3)]
+                  active:translate-y-[2px] active:shadow-[0_0px_0_#0f3eb4,0_2px_4px_rgba(0,0,0,0.3)]
                   transition-all duration-150"
                 onClick={handleOpenModal}
               >

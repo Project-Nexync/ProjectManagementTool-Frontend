@@ -96,7 +96,7 @@ export default function ChatContainer({ projectId, user }) {
   return (
     <div
       className="flex flex-col h-[420px] bg-transparent backdrop-blur-lg rounded-2xl pt-2 px-0 w-full shadow-[0_4px_30px_rgba(0,0,0,0.6)] border border-white/10 ring-1 ring-white/5 overflow-hidden"
-      style={{ minWidth: 340 }}
+      style={{ minWidth: 200 }}
     >
       <div className="flex flex-col items-center justify-center bg-transparent backdrop-blur-lg pt-0 pb-2 border-b border-white/10">
         <div className="font-bold text-xl text-white tracking-wide drop-shadow">
