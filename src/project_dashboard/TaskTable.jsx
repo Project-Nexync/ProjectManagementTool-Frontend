@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { IoFilter } from "react-icons/io5";
-import api from "../API.jsx"; 
+import api from "../API.jsx";
+import axios from "axios";
 
 const statusOptions = ["Pending", "Ongoing", "Completed"];
 
 export default function TaskTable() {
-  const { projectId } = useParams(); 
+  const { projectId } = useParams();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,6 +19,7 @@ export default function TaskTable() {
   const [showAssigneeFilter, setShowAssigneeFilter] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
 
+  // Fetch tasks
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -44,7 +46,7 @@ export default function TaskTable() {
     status: task.status,
     deadline: task.due_date,
     assignees: task.assigned_to ? [task.assigned_to.toString()] : [],
-    attachments: task.attachments || "-"
+    attachments: task.attachments || []
   }));
 
   const filteredTasks = mappedTasks.filter(task => {
@@ -57,16 +59,64 @@ export default function TaskTable() {
     sortAsc ? new Date(a.deadline) - new Date(b.deadline) : new Date(b.deadline) - new Date(a.deadline)
   );
 
+  // Update task status
   const updateStatus = async (taskId, newStatus) => {
     try {
       await api.put(`/edit/${projectId}/progress/${taskId}`, { progress: newStatus });
-      setTasks(prev => prev.map(t => (t.task_id === taskId ? { ...t, status: newStatus } : t)));
+      setTasks(prev => prev.map(t => (t.id === taskId ? { ...t, status: newStatus } : t)));
     } catch (err) {
       console.error(err);
       alert("Failed to update status");
     }
   };
 
+  // Upload file for a task
+  const handleFileUpload = async (event, taskId) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      // Generate signed URL
+      const { data } = await api.post("/upload/file/generate-url", {
+        fileName: file.name,
+        fileType: file.type,
+        taskId: taskId,
+      });
+
+      const uploadUrl = data.url;
+      if (!uploadUrl) {
+        alert("Upload URL not received from server!");
+        return;
+      }
+
+      // Upload to S3
+      await axios.put(uploadUrl, file, {
+        headers: { "Content-Type": file.type },
+      });
+
+      alert("✅ File uploaded successfully!");
+    } catch (error) {
+      console.error("File upload failed:", error);
+      alert("❌ File upload failed. Check console for details.");
+    }
+  };
+
+  // View file
+  const viewFile = async (fileId) => {
+    try {
+      const { data } = await api.get(`/upload/file/${fileId}`);
+      if (data.url) {
+        window.open(data.url, "_blank");
+      } else {
+        alert("File URL not found");
+      }
+    } catch (err) {
+      console.error("Failed to open file:", err);
+      alert("Failed to open file.");
+    }
+  };
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClick(e) {
       if (!e.target.closest(".status-filter-dropdown")) setShowStatusFilter(false);
@@ -107,9 +157,7 @@ export default function TaskTable() {
                     {["All", ...statusOptions].map(option => (
                       <div
                         key={option}
-                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                          statusFilter === option ? "font-bold text-blue-400" : ""
-                        }`}
+                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${statusFilter === option ? "font-bold text-blue-400" : ""}`}
                         onClick={() => {
                           setStatusFilter(option);
                           setShowStatusFilter(false);
@@ -121,11 +169,7 @@ export default function TaskTable() {
                   </div>
                 )}
               </th>
-              <th
-                className="py-3 px-2 text-left font-bold cursor-pointer"
-                style={{ width: "15%" }}
-                onClick={() => setSortAsc(s => !s)}
-              >
+              <th className="py-3 px-2 text-left font-bold cursor-pointer" style={{ width: "15%" }} onClick={() => setSortAsc(s => !s)}>
                 Deadline <span className="ml-1">{sortAsc ? "▲" : "▼"}</span>
               </th>
               <th className="py-3 px-2 text-left font-bold relative" style={{ width: "15%" }}>
@@ -147,9 +191,7 @@ export default function TaskTable() {
                     {assigneeOptions.map(option => (
                       <div
                         key={option}
-                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${
-                          assigneeFilter === option ? "font-bold text-blue-400" : ""
-                        }`}
+                        className={`px-4 py-2 cursor-pointer hover:bg-blue-700 ${assigneeFilter === option ? "font-bold text-blue-400" : ""}`}
                         onClick={() => {
                           setAssigneeFilter(option);
                           setShowAssigneeFilter(false);
@@ -164,46 +206,36 @@ export default function TaskTable() {
               <th className="py-3 px-2 text-left font-bold" style={{ width: "15%" }}>Attachments</th>
             </tr>
           </thead>
+
           <tbody>
-            {sortedTasks.map(task => (
-              <tr key={task.id} className="border-b border-[#294372]">
-                <td className="py-2 pl-4 pr-2">{task.task}</td>
+            {sortedTasks.map(({ id, task: taskName, assignees, attachments, deadline, status }) => (
+              <tr key={id} className="border-b border-[#294372]">
+                <td className="py-2 pl-4 pr-2">{taskName}</td>
                 <td className="py-2 px-2">
                   <select
-                    className={`rounded text-xs font-bold px-2 py-1 ${
-                      task.status === "Completed"
-                        ? "bg-green-700 text-white"
-                        : task.status === "Ongoing"
-                        ? "bg-blue-700 text-white"
-                        : "bg-yellow-600 text-white"
-                    }`}
-                    value={task.status}
-                    onChange={e => updateStatus(task.id, e.target.value)}
+                    className={`rounded text-xs font-bold px-2 py-1 ${status === "Completed" ? "bg-green-700 text-white" : status === "Ongoing" ? "bg-blue-700 text-white" : "bg-yellow-600 text-white"}`}
+                    value={status}
+                    onChange={e => updateStatus(id, e.target.value)}
                   >
                     {statusOptions.map(option => (
                       <option key={option} value={option}>{option}</option>
                     ))}
                   </select>
                 </td>
-                {/* Editable deadline with date and time in separate lines */}
-                <td className="py-2 px-2" onClick={() => setEditingTaskId(task.id)}>
-                  {editingTaskId === task.id ? (
+                <td className="py-2 px-2" onClick={() => setEditingTaskId(id)}>
+                  {editingTaskId === id ? (
                     <input
                       type="datetime-local"
                       autoFocus
                       className="border px-1 py-0.5 rounded text-black text-sm w-full"
-                      defaultValue={task.deadline ? new Date(task.deadline).toISOString().slice(0, 16) : ""}
+                      defaultValue={deadline ? new Date(deadline).toISOString().slice(0, 16) : ""}
                       onBlur={async e => {
                         const newDueDate = e.target.value;
                         try {
-                          await api.put(`/edit/${projectId}/duedate/${task.id}`, {
-                            duedate: newDueDate.replace("T", " ")
+                          await api.put(`/edit/${projectId}/duedate/${id}`, {
+                            duedate: newDueDate.replace("T", " "),
                           });
-                          setTasks(prev =>
-                            prev.map(t =>
-                              t.id === task.id ? { ...t, deadline: new Date(newDueDate) } : t
-                            )
-                          );
+                          setTasks(prev => prev.map(t => t.id === id ? { ...t, deadline: new Date(newDueDate) } : t));
                         } catch (err) {
                           console.error("Failed to update due date", err);
                           alert("Failed to update due date");
@@ -212,25 +244,47 @@ export default function TaskTable() {
                         }
                       }}
                     />
-                  ) : task.deadline ? (
+                  ) : deadline ? (
                     <div>
-                      <div>{new Date(task.deadline).toLocaleDateString()}</div>
-                      <div>{new Date(task.deadline).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/am|pm/i, m => m.toUpperCase())}</div>
+                      <div>{new Date(deadline).toLocaleDateString()}</div>
+                      <div>{new Date(deadline).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/am|pm/i, m => m.toUpperCase())}</div>
                     </div>
-                  ) : (
-                    "-"
-                  )}
+                  ) : "-"}
                 </td>
                 <td className="py-2 px-2">
                   <div className="flex -space-x-2">
-                    {task.assignees.map((a, idx) => (
+                    {assignees.map((a, idx) => (
                       <img key={a + idx} src={`/src/assets/usericon.png`} alt={a} className="w-6 h-6 rounded-full border-2 border-white" />
                     ))}
                   </div>
                 </td>
                 <td className="py-2 px-2">
-                  <span className="font-mono text-sm">{task.attachments}</span>
-                </td>
+  <div className="flex items-center gap-2 flex-wrap">
+    {attachments.length > 0
+      ? attachments.map((file, idx) => (
+          <span
+            key={idx}
+            onClick={() => viewFile(file.file_id)}
+            className="text-white underline text-sm cursor-pointer"
+          >
+            {file.file_name}
+          </span>
+        ))
+      : <span className="text-gray-400 text-sm">No files</span>
+    }
+
+    {/* Single + button for the task, inline with file names */}
+    <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 w-6 h-6 flex items-center justify-center text-sm rounded">
+      +
+      <input
+        type="file"
+        className="hidden"
+        onChange={(e) => handleFileUpload(e, id)}
+      />
+    </label>
+  </div>
+</td>
+
               </tr>
             ))}
           </tbody>

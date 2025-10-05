@@ -199,14 +199,14 @@ export default function CreateTask({ onFinish }) {
           ))}
         </div>
 
-        {!aiSuggested && (
+        {/* {!aiSuggested && (
           <button
             className="flex items-center gap-2 text-blue-600 font-semibold mt-2 border-2 border-blue-600 rounded-lg px-2 py-0 hover:bg-blue-600 hover:text-white"
             onClick={handleAddTask}
           >
             <span className="text-xl">＋</span> add another task
           </button>
-        )}
+        )} */}
 
         <div className="flex items-center mt-6 mb-2">
           <div className="flex-1 border-t border-gray-700"></div>
@@ -273,7 +273,7 @@ export default function CreateTask({ onFinish }) {
           </table>
         </div>
 
-        {!aiSuggested && (
+        {/* {!aiSuggested && (
           <div className="mt-6">
             <button
               className="w-fit bg-gradient-to-r from-[#3A116E] to-[#8926E6] text-white py-3 px-4 rounded-3xl font-semibold shadow-lg flex items-center justify-center gap-2 font-mono hover:scale-105 transform transition-transform duration-200"
@@ -289,10 +289,10 @@ export default function CreateTask({ onFinish }) {
           <div className="mt-6 text-center text-purple-700 font-semibold">
             Loading AI suggestions...
           </div>
-        )}
+        )} */}
 
         <button
-          className={`mt-6 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl ${
+          className={`mt-6 w-full bg-[#1452d5] hover:bg-[#0e3e8d] text-white font-bold py-3 rounded-xl ${
             isFinishDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleFinish}
