@@ -6,6 +6,7 @@ import { BsBookmarkFill } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
 import DefaultUserIcon from '../assets/usericon.png';
 
+
 function TopNav({ user }) {
   const profilePic = user?.profilePic || DefaultUserIcon;
   return (
@@ -35,8 +36,7 @@ function TopNav({ user }) {
           <FiSettings className="text-2xl mb-3 group-hover:text-blue-400" />
           <span className="text-xs tracking-widest">Settings</span>
         </a>
-        <span className="font-bold text-blue-400">Steven Smith</span>
-        <img src={profilePic} alt="Profile" className="w-10 h-10 rounded-full border-2 border-blue-400" />
+        
       </div>
     </div>
   );
