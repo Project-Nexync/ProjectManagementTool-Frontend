@@ -7,15 +7,6 @@ export default function ProjectCardsGrid({ search }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const innerShadowColors = [
-    "rgba(255,255,0,0.25)",
-    "rgba(0,255,255,0.25)",
-    "rgba(255,0,255,0.25)",
-    "rgba(255,128,0,0.25)",
-    "rgba(0,255,128,0.25)",
-    "rgba(128,0,255,0.25)",
-  ];
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -64,13 +55,11 @@ export default function ProjectCardsGrid({ search }) {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-2 max-w-7xl mx-auto">
+    // <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-0 p-2 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-2 max-w-7xl mx-auto"> 
       {filteredProjects.map((p, i) => (
         <div key={p.project_id || i} className="w-full min-h-0">
-          <ProjectCard
-            {...p}
-            innerShadowColor={innerShadowColors[i % innerShadowColors.length]}
-          />
+          <ProjectCard {...p} />
         </div>
       ))}
     </div>

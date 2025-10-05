@@ -1,52 +1,90 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // ✅ missing import
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import api from "../API.jsx"; // adjust path if needed
 
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ProjectTaskCompletionChart() {
-  // Data and labels for the chart
+  const { projectId } = useParams(); // get projectId dynamically
+  const [progressData, setProgressData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    const fetchProgress = async () => {
+      try {
+        const response = await api.get(`/project/${projectId}/progress`);
+        if (response.data.success) {
+          setProgressData(response.data);
+        } else {
+          setProgressData(null);
+        }
+      } catch (error) {
+        console.error("Error fetching progress data:", error);
+        setProgressData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProgress();
+  }, [projectId]); 
+  if (loading) {
+    return (
+      <div className="text-center text-gray-300 p-6">
+        Loading chart data...
+      </div>
+    );
+  }
+
+  if (!progressData) {
+    return (
+      <div className="text-center text-red-400 p-6">
+        Failed to load project progress data.
+      </div>
+    );
+  }
+
+  const completed = progressData.completedTask || 0;
+  const ongoing = progressData.ongoingTask || 0;
+  const pending = progressData.pendingTask || 0;
+  
+
   const data = {
-    labels: ['Completed', 'In Progress', 'Not Started', 'Critical'],
+    labels: ["Completed", "Ongoing", "Pending"],
     datasets: [
       {
-        label: 'Tasks',
-        data: [3, 2, 1, 1],
-        backgroundColor: [
-          '#22C55E', // green-500
-          '#3B82F6', // blue-500
-          '#FBBF24', // yellow-500
-          '#EF4444', // red-500
-        ],
-        borderColor: '#222A34',
+        label: "Tasks",
+        data: [completed, ongoing, pending],
+        backgroundColor: ["#22C55E", "#3B82F6", "#FBBF24"],
+        borderColor: "#222A34",
         borderWidth: 2,
         hoverOffset: 8,
       },
     ],
   };
 
-
   const options = {
     responsive: true,
-    cutout: '70%', // for doughnut, use 0 for pie
+    cutout: "70%",
     plugins: {
       legend: {
         display: true,
-        position: 'bottom',
-        align: 'start',
+        position: "bottom",
+        align: "start",
         labels: {
           boxWidth: 18,
           boxHeight: 18,
-          font: {
-            size: 20,
-            weight: 'medium',
-          },
-          color: '#f3f4f6',
+          font: { size: 16, weight: "medium" },
+          color: "#f3f4f6",
           padding: 18,
-          generateLabels: function(chart) {
-            const data = chart.data;
-            const dataset = data.datasets[0];
+          generateLabels: function (chart) {
+            const dataset = chart.data.datasets[0];
             const total = dataset.data.reduce((a, b) => a + b, 0);
-            return data.labels.map((label, i) => {
+            return chart.data.labels.map((label, i) => {
               const value = dataset.data[i];
               const percent = total ? ((value / total) * 100).toFixed(0) : 0;
               return {
@@ -54,43 +92,40 @@ export default function ProjectTaskCompletionChart() {
                 fillStyle: dataset.backgroundColor[i],
                 strokeStyle: dataset.borderColor,
                 lineWidth: dataset.borderWidth,
-                hidden: isNaN(dataset.data[i]) || chart.getDataVisibility(i) === false,
-                index: i
+                hidden:
+                  isNaN(dataset.data[i]) ||
+                  chart.getDataVisibility(i) === false,
+                index: i,
               };
             });
           },
         },
       },
       tooltip: {
-        enabled: true,
         callbacks: {
-          label: function(context) {
-            const label = context.label || '';
+          label: function (context) {
+            const label = context.label || "";
             const value = context.parsed;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
             const percent = total ? ((value / total) * 100).toFixed(0) : 0;
             return `${label}: ${value} (${percent}%)`;
-          }
-        }
+          },
+        },
       },
-    },
-    layout: {
-      padding: 0,
     },
     maintainAspectRatio: false,
   };
 
-  // Plugin to force legend label color to white
   const legendLabelWhitePlugin = {
-    id: 'legendLabelWhitePlugin',
+    id: "legendLabelWhitePlugin",
     beforeDraw(chart) {
       const legend = chart.legend;
       if (legend && legend.legendItems) {
-        legend.legendItems.forEach(item => {
-          item.fontColor = '#A6CFFE';
+        legend.legendItems.forEach((item) => {
+          item.fontColor = "#A6CFFE";
         });
       }
-    }
+    },
   };
 
   return (
@@ -105,15 +140,16 @@ export default function ProjectTaskCompletionChart() {
               data={data}
               options={options}
               plugins={[legendLabelWhitePlugin]}
-              width={undefined}
-              height={undefined}
             />
           </div>
         </div>
       </div>
-        <div className="text-xs text-center text-gray-200 mt-2 italic" style={{ fontFamily: 'sans-serif' }}>
-      a visual overview of task completion across this project.
-    </div>
+      <div
+        className="text-xs text-center text-gray-200 mt-2 italic"
+        style={{ fontFamily: "sans-serif" }}
+      >
+        A visual overview of task completion across this project.
+      </div>
     </div>
   );
 }

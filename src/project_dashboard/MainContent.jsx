@@ -18,6 +18,8 @@ export default function ProjectMainContent() {
   const [newEmail, setNewEmail] = useState("");
   const [newRole, setNewRole] = useState("member");
 
+  const [completionPercentage, setCompletionPercentage] = useState(0); // ✅ dynamic percentage
+
   const teamRef = useRef(null);
 
   // Fetch project data
@@ -33,8 +35,21 @@ export default function ProjectMainContent() {
     }
   };
 
+  // Fetch project progress
+  const fetchProgress = async () => {
+    try {
+      const res = await api.get(`/project/${projectId}/progress`);
+      if (res.data.success) {
+        setCompletionPercentage(parseFloat(res.data.progress)); // use API progress
+      }
+    } catch (err) {
+      console.error("Failed to fetch project progress:", err);
+    }
+  };
+
   useEffect(() => {
     fetchProject();
+    fetchProgress(); // fetch percentage
   }, [projectId]);
 
   // Close members list when clicking outside or pressing Escape
@@ -69,7 +84,6 @@ export default function ProjectMainContent() {
       });
 
       if (res.data.success) {
-        // Re-fetch project to immediately reflect changes
         await fetchProject();
         setNewEmail("");
         setNewRole("member");
@@ -123,7 +137,7 @@ export default function ProjectMainContent() {
           </div>
           <div className="bg-[#1e293b] text-blue-300 px-3 py-1 rounded-lg font-bold text-sm">
             <AiFillPieChart className="inline-block mr-2 w-4 h-4 text-blue-300 -mt-1" />
-            <span>Task Completion Percentage : 0%</span>
+            <span>Task Completion Percentage : {completionPercentage}%</span> {/* ✅ dynamic */}
           </div>
         </div>
 

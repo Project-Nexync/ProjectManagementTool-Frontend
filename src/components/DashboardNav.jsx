@@ -16,7 +16,7 @@ function TopNav() {
     <>
       <div className="flex justify-between items-center bg-transparent shadow-md h-16 px-4">
         {/* Search Bar */}
-        <div className="relative w-1/4 h-12">
+        <div className="relative w-1/4 h-12 ml-18">
           <input
             className="bg-[#D9D9D923] text-white px-4 py-2 rounded-4xl w-full pr-10 border border-zinc-400"
             style={{ fontFamily: 'HelveticaBold, sans-serif', letterSpacing: '0.08em' }}

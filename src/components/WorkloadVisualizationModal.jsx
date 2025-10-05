@@ -1,71 +1,81 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // get projectId from URL
 import { IoClose } from "react-icons/io5";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import api from "../API.jsx";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const teamData = [
-  { name: "Steve Smith", avatar: "https://randomuser.me/api/portraits/men/1.jpg", percentage: 85.71 },
-  { name: "Kallis Jaques", avatar: "https://randomuser.me/api/portraits/women/2.jpg", percentage: 22.41 },
-  { name: "McCullum", avatar: "https://randomuser.me/api/portraits/men/3.jpg", percentage: 68 },
-  { name: "Lana", avatar: "https://randomuser.me/api/portraits/women/4.jpg", percentage: 59.3 },
-];
-
-const chartData = {
-  labels: teamData.map((member) => member.name),
-  datasets: [
-    {
-      label: "Task Allocation (%)",
-      data: teamData.map((member) => member.percentage),
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-      borderColor: "rgba(75, 192, 192, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-const chartOptions = {
-  indexAxis: "y", // Horizontal bars
-  responsive: true,
-  barThickness: 25, // Reduce the width of the bars
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Team Workload Visualization",
-      font: {
-        size: 24,
-        weight: "bold",
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => {
-          const member = teamData[context.dataIndex];
-          return `${member.name}: ${member.percentage}%`;
-        },
-      },
-    },
-  },
-  scales: {
-    y: {
-      ticks: {
-        callback: (value, index) => {
-          const member = teamData[index];
-          return ` ${member.name}`;
-        },
-        font: {
-          size: 14,
-        },
-      },
-    },
-  },
-};
-
 export default function WorkloadVisualizationModal({ onClose }) {
+  const { projectId } = useParams(); // automatically read from URL
+  const [teamData, setTeamData] = useState([]);
+
+  useEffect(() => {
+    const fetchWorkload = async () => {
+      try {
+        if (!projectId) return;
+        const res = await api.get(`/project/${projectId}/workload`);
+        if (res.data.success && res.data.users) {
+          const mappedData = res.data.users.map(user => ({
+            name: user.name,
+            avatar: "https://randomuser.me/api/portraits/lego/1.jpg", // placeholder
+            percentage: parseFloat(user.contribution)
+          }));
+          setTeamData(mappedData);
+        }
+      } catch (err) {
+        console.error("Error fetching workload:", err);
+      }
+    };
+
+    fetchWorkload();
+  }, [projectId]);
+
+  const chartData = {
+    labels: teamData.map(member => member.name),
+    datasets: [
+      {
+        label: "Task Allocation (%)",
+        data: teamData.map(member => member.percentage),
+        backgroundColor: "#4b79dbff",
+        borderColor: "#0a50e7ff",
+        borderWidth: 1
+      }
+    ]
+  };
+
+  const chartOptions = {
+    indexAxis: "y",
+    responsive: true,
+    barThickness: 25,
+    plugins: {
+      legend: { position: "top" },
+      title: {
+        display: true,
+        text: "Team Workload Visualization",
+        font: { size: 24, weight: "bold" }
+      },
+      tooltip: {
+        callbacks: {
+          label: context => `${teamData[context.dataIndex].name}: ${teamData[context.dataIndex].percentage}%`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0,
+        max: 100
+      },
+      y: {
+        ticks: {
+          callback: (value, index) => ` ${teamData[index]?.name || ""}`,
+          font: { size: 14 }
+        }
+      }
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
@@ -89,25 +99,7 @@ export default function WorkloadVisualizationModal({ onClose }) {
 
         {/* Chart */}
         <div className="flex flex-col gap-4">
-          <Bar
-            data={chartData}
-            options={{
-              ...chartOptions,
-              scales: {
-                y: {
-                  ticks: {
-                    callback: (value, index) => {
-                      const member = teamData[index];
-                      return ` ${member.name}`;
-                    },
-                    font: {
-                      size: 14,
-                    },
-                  },
-                },
-              },
-            }}
-          />
+          <Bar data={chartData} options={chartOptions} />
         </div>
       </div>
     </div>
