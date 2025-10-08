@@ -7,8 +7,9 @@ import { FiSettings } from 'react-icons/fi';
 import DefaultUserIcon from '../assets/usericon.png';
 
 
-function TopNav({ user }) {
+function TopNav() {
   const profilePic = user?.profilePic || DefaultUserIcon;
+  
   return (
     <div className="flex justify-between items-center bg-transparent shadow-md h-16">
       <div className="relative w-1/4 h-12">

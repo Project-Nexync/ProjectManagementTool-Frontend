@@ -1,36 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NotificationItem from "../components/NotificationItem";
 import { IoClose } from "react-icons/io5";
-
-const notifications = [
-  {
-    id: 1,
-    project: "Website Redesign",
-    task: "Revamp Navigation Structure",
-    description: "Kallis Jaques added an attachment to the task",
-    date: "06-08-2025",
-    time: "11:30 AM"
-  },
-  {
-    id: 2,
-    project: "Marketing Campaign Q4",
-    task: "",
-    description: "Mahela Jay added you to this project",
-    date: "06-08-2025",
-    time: "10:15 AM"
-  },
-  // ...more static notifications
-];
+import api from "../API.jsx";
 
 export default function NotificationPanel({ open, onClose }) {
+  const [notifications, setNotifications] = useState([]);
+
+  // Fetch notifications from API
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+
+      api.get("/project/user/notification")
+        .then(res => {
+          if (res.data.success) {
+            const mappedNotifications = res.data.data.map(n => ({
+              id: n.notification_id,
+              project: n.type,
+              description: n.content,
+              date: new Date(n.created_at).toLocaleDateString(),
+              time: new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              isNew: !n.is_read
+            }));
+            setNotifications(mappedNotifications);
+          }
+        })
+        .catch(err => console.error(err));
     } else {
       document.body.style.overflow = "";
     }
+
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  // Handle click on a notification
+  const handleClick = async (id) => {
+    try {
+      await api.put("/project/user/notification/isRead", { notification_id: id });
+
+      // Update local state to remove the red dot
+      setNotifications(prev =>
+        prev.map(n =>
+          n.id === id ? { ...n, isNew: false } : n
+        )
+      );
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
 
   if (!open) return null;
 
@@ -53,10 +70,20 @@ export default function NotificationPanel({ open, onClose }) {
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
           {notifications.map(n => (
-            <NotificationItem key={n.id} {...n} />
+            <div
+              key={n.id}
+              className="relative cursor-pointer"
+              onClick={() => handleClick(n.id)}
+            >
+              {n.isNew && (
+                <span className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+              )}
+              <NotificationItem {...n} />
+            </div>
           ))}
         </div>
       </aside>
+
       <style>{`
         @keyframes slide-in-right {
           from { transform: translateX(100%); }

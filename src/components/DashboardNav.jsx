@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import NotificationPanel from "../pages/NotificationPanel";
 import { MdSearch } from 'react-icons/md';
 import { AiFillHome } from 'react-icons/ai';
@@ -6,11 +6,26 @@ import { IoMdNotifications } from 'react-icons/io';
 import { BsBookmarkFill } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
 import DefaultUserIcon from '../assets/usericon.png';
+import api from "../API.jsx";
 
 function TopNav() {
   const [showNotifications, setShowNotifications] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
-  const profilePic = user?.profilePic || DefaultUserIcon;
+  const [profilePic, setProfilePic] = useState(DefaultUserIcon);
+  
+    useEffect(() => {
+      const fetchProfilePic = async () => {
+        try {
+          const res = await api.get("/upload/profile-pic/view");
+          if (res.data && res.data.url) {
+            setProfilePic(res.data.url);
+          }
+        } catch (err) {
+          console.error("Error fetching profile picture:", err);
+        }
+      };
+      fetchProfilePic();
+    }, []);
 
   return (
     <>
@@ -42,12 +57,12 @@ function TopNav() {
             <span className="text-xs tracking-widest">Notifications</span>
           </button>
 
-          <a href="#saved" className="flex flex-col items-center group hover:text-blue-400 transition-colors">
+          <a href="/saved" className="flex flex-col items-center group hover:text-blue-400 transition-colors">
             <BsBookmarkFill className="text-2xl mb-3 group-hover:text-blue-400" />
             <span className="text-xs tracking-widest">Saved</span>
           </a>
 
-          <a href="#settings" className="flex flex-col items-center group hover:text-blue-400 transition-colors">
+          <a href="/settings" className="flex flex-col items-center group hover:text-blue-400 transition-colors">
             <FiSettings className="text-2xl mb-3 group-hover:text-blue-400" />
             <span className="text-xs tracking-widest">Settings</span>
           </a>

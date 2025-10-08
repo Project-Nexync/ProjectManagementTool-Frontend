@@ -27,7 +27,7 @@ export default function MainContent() {
 
   return (
     <main className="flex-1 flex flex-col p-8 pt-4">
-      <TopNav user={user} />
+      <TopNav/>
       <div className="flex flex-row gap-8 mt-6">
         <ProjectCardsGrid filterType={filterType} />
         <div className="flex flex-col gap-6 w-80">
