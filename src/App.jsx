@@ -17,8 +17,8 @@ function App() {
         <Route path="/features" element={<Features />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/about" element={<About />} />
-  <Route path="/project/:projectName" element={<ProjectDashboard />} />
-  <Route path="/saved" element={<SavedProjects />} />
+        <Route path="/project/:projectId" element={<ProjectDashboard />} />
+        <Route path="/saved" element={<SavedProjects />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </Router>

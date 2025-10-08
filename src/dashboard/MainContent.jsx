@@ -27,11 +27,11 @@ export default function MainContent() {
 
   return (
     <main className="flex-1 flex flex-col p-8 pt-4">
-      <TopNav user={user} />
+      <TopNav/>
       <div className="flex flex-row gap-8 mt-6">
         <ProjectCardsGrid filterType={filterType} />
         <div className="flex flex-col gap-6 w-80">
-          <CalendarPanel />
+          {/* <CalendarPanel />
           <button
             className="
             flex items-center justify-center gap-2 
@@ -46,10 +46,10 @@ export default function MainContent() {
             <VscGraph className="w-5 h-5" />
             <span>View Personal Workload Heatmap</span>
           </button>
-          <TaskCompletionChart />
+          <TaskCompletionChart /> */}
         </div>
       </div>
-      <WorkloadHeatmapModal open={showHeatmap} onClose={() => setShowHeatmap(false)} />
+      {/* <WorkloadHeatmapModal open={showHeatmap} onClose={() => setShowHeatmap(false)} /> */}
     </main>
   );
 }

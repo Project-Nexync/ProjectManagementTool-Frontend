@@ -1,56 +1,73 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import NexyncLogo from "../assets/nexync.png";
+import axios from "axios";
+// import NexyncLogo from "../assets/nexync.png"; // optional
 
 function SignUpModal({ onClose, onSwitchToSignIn }) {
-  const [profileImageName, setProfileImageName] = useState("");
-  const fileInputRef = useRef(null);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const [skills, setSkills] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
-  // Fake API call for skills
-  useEffect(() => {
-    setSkills([
-      { id: 1, name: "React" },
-      { id: 2, name: "Node.js" },
-      { id: 3, name: "UI/UX" },
-      { id: 4, name: "Project Management" },
-    ]);
-  }, []);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    if (!showSkillsDropdown) return;
-    const handleClick = (e) => {
-      if (!e.target.closest(".skills-dropdown-parent"))
-        setShowSkillsDropdown(false);
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showSkillsDropdown]);
+  const [profileImageName, setProfileImageName] = useState("");
+  const fileInputRef = useRef(null);
+
+  // const [skills, setSkills] = useState([]); // Keep skills commented
+  // const [selectedSkills, setSelectedSkills] = useState([]);
+  // const [showSkillsDropdown, setShowSkillsDropdown] = useState(false);
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) setProfileImageName(file.name);
   };
 
-  const toggleSkill = (id) => {
-    setSelectedSkills((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!agreeTerms) {
+      alert("You must agree to the Terms of Use and Privacy Policy.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const payload = {
+        firstname: firstName,
+        lastname: lastName,
+        username,
+        email,
+        password,
+        notification,
+        profileImage: profileImageName, // profile image name sent
+        // skills: selectedSkills, // still commented
+      };
+
+      const res = await axios.post("http://localhost:5000/auth/register", payload);
+      console.log(res.data);
+      alert("Registered successfully");
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed");
+    }
   };
 
-  // ✅ Common input styles
+  // Input classes
   const inputClass =
     "w-full border rounded-lg border-gray-400 px-4 py-2 placeholder-gray-400 text-gray-600";
-
-  const labelClass =
-    "text-xs ml-1 text-[#666666] font-sans select-none";
+  const labelClass = "text-xs ml-1 text-[#666666] font-sans select-none";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -72,37 +89,45 @@ function SignUpModal({ onClose, onSwitchToSignIn }) {
 
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <span className="text-2xl font-semibold text-black">
-            Register with
-          </span>
-          <img
-            src={NexyncLogo}
-            alt="Nexync Logo"
-            className="h-8 filter brightness-0"
-          />
+          <span className="text-2xl font-semibold text-black">Register</span>
+          {/* <img src={NexyncLogo} alt="Nexync Logo" className="h-8 filter brightness-0" /> */}
         </div>
 
-        {/* Form */}
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* First + Last name */}
           <div className="flex gap-4">
             <div className="flex-1 flex flex-col gap-1">
               <label className={labelClass}>First name</label>
-              <input className={inputClass} />
+              <input
+                className={inputClass}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
             </div>
             <div className="w-48 flex flex-col gap-1">
               <label className={labelClass}>Last name</label>
-              <input className={inputClass} />
+              <input
+                className={inputClass}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
             </div>
           </div>
 
           {/* Username + Profile image */}
           <div className="flex gap-4">
             <div className="flex-1 flex flex-col gap-1">
-              <label className={labelClass}>Nexync Username</label>
-              <input className={inputClass} />
+              <label className={labelClass}>Username</label>
+              <input
+                className={inputClass}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
             </div>
-              <div className="w-48 flex flex-col gap-1">
+            <div className="w-48 flex flex-col gap-1">
               <label className={labelClass}>Profile Image</label>
               <div className="relative">
                 <input
@@ -133,131 +158,88 @@ function SignUpModal({ onClose, onSwitchToSignIn }) {
           {/* Email */}
           <div className="flex flex-col gap-1">
             <label className={labelClass}>Email address</label>
-            <input className={inputClass} />
+            <input
+              className={inputClass}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              required
+            />
           </div>
 
           {/* Password + Confirm */}
           <div className="flex gap-4">
-            {[["Password", showPassword, setShowPassword],
-              ["Confirm Password", showConfirm, setShowConfirm]].map(
-              ([label, state, setState], i) => (
-                <div key={i} className="flex-1 flex flex-col gap-1">
-                  <label className={labelClass}>{label}</label>
-                  <div className="relative">
-                    <input
-                      className={`${inputClass} pr-10`}
-                      type={state ? "text" : "password"}
-                    />
-                    <span
-                      onClick={() => setState((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 text-lg"
-                    >
-                      {state ? <FaEyeSlash /> : <FaEye />}
-                    </span>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-
-          {/* Skills */}
-          <div className="flex flex-col gap-1 skills-dropdown-parent">
-            <label className={labelClass}>Project Related Skills</label>
-            <div
-              className={`${inputClass} flex items-center cursor-pointer bg-white`}
-              onClick={() => setShowSkillsDropdown((v) => !v)}
-            >
-              <span className="flex-1 text-xs font-mono text-gray-600">
-                {selectedSkills.length === 0
-                  ? <span className="text-gray-400">Select skills...</span>
-                  : skills
-                      .filter((s) => selectedSkills.includes(String(s.id)))
-                      .map((s) => s.name)
-                      .join(", ")}
-              </span>
-              <svg
-                className={`w-4 h-4 ml-2 transition-transform ${
-                  showSkillsDropdown ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-            {showSkillsDropdown && (
-              <div className="absolute mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-20 max-h-40 overflow-y-auto w-full">
-                {skills.map((skill) => (
-                  <div
-                    key={skill.id}
-                    className={`px-4 py-2 text-sm cursor-pointer hover:bg-blue-50 flex items-center ${
-                      selectedSkills.includes(String(skill.id))
-                        ? "bg-blue-100 font-semibold text-[#1C89EF]"
-                        : "text-[#666666]"
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSkill(String(skill.id));
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedSkills.includes(String(skill.id))}
-                      readOnly
-                      className="mr-2"
-                    />
-                    {skill.name}
-                  </div>
-                ))}
+            {[
+              ["Password", showPassword, setShowPassword, password, setPassword],
+              ["Confirm Password", showConfirm, setShowConfirm, confirmPassword, setConfirmPassword],
+            ].map(([label, state, setState, value, setValue], i) => (
+              <div key={i} className="flex-1 flex flex-col gap-1 relative">
+                <label className={labelClass}>{label}</label>
+                <input
+                  type={state ? "text" : "password"}
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  className={`${inputClass} pr-10`}
+                  required
+                />
+                <span
+                  onClick={() => setState((v) => !v)}
+                  className="absolute right-3 top-[55%] cursor-pointer text-gray-500 text-lg"
+                >
+                  {state ? <FaEyeSlash /> : <FaEye />}
+                </span>
               </div>
-            )}
+            ))}
           </div>
 
           {/* Checkboxes */}
           <div className="flex items-start gap-2 mt-2">
-            <input type="checkbox" className="w-4 h-4 accent-black" />
+            <input
+              type="checkbox"
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+              className="w-4 h-4 accent-black"
+            />
             <span className="text-xs text-gray-700">
               By creating an account, I agree to our{" "}
-              <a href="#" className="underline">
-                Terms of use
-              </a>{" "}
-              and{" "}
-              <a href="#" className="underline">
-                Privacy Policy
-              </a>
+              <a href="#" className="underline">Terms of use</a> and{" "}
+              <a href="#" className="underline">Privacy Policy</a>
             </span>
           </div>
 
           <div className="flex items-start gap-2">
-            <input type="checkbox" className="w-4 h-4 accent-black" />
+            <input
+              type="checkbox"
+              checked={notification}
+              onChange={(e) => setNotification(e.target.checked)}
+              className="w-4 h-4 accent-black"
+            />
             <span className="text-xs text-gray-700">
-              I consent to receive reminders, notifications, and product updates
+              I consent to receive reminders, notification, and product updates
             </span>
           </div>
 
           {/* Submit */}
-          <div className="flex items-center gap-4 mt-4">
+          <button
+            type="submit"
+            className="w-full bg-[#1C89EF] text-white py-2 rounded-lg mt-4 hover:bg-[#1877c9] transition-colors"
+          >
+            Sign Up
+          </button>
+
+          {/* Switch to login */}
+          <div className="text-sm text-gray-500 mt-2">
+            Already have an account?{" "}
             <button
-              type="submit"
-              className="w-30 bg-[#1C89EF] text-white border rounded-4xl px-6 py-2 font-semibold text-base shadow hover:bg-[#1877c9] transition-colors"
+              type="button"
+              className="underline text-[#1C89EF] font-medium hover:text-[#0056b3] focus:outline-none"
+              onClick={() => {
+                onClose && onClose();
+                onSwitchToSignIn && onSwitchToSignIn();
+              }}
             >
-              Sign up
+              Log in
             </button>
-            <span className="text-sm text-gray-500">
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="underline text-[#1C89EF] font-medium hover:text-[#0056b3] focus:outline-none"
-                onClick={() => {
-                  onClose && onClose();
-                  onSwitchToSignIn && onSwitchToSignIn();
-                }}
-              >
-                Log in
-              </button>
-            </span>
           </div>
         </form>
       </div>
