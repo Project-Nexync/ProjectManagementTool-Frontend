@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Plus, Minus } from "lucide-react"
 import { Button } from "../components/loginButton"
@@ -57,9 +55,9 @@ export default function About() {
 
       <Navbar />
 
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-24 px-4 py-28 max-w-[90rem] mx-auto"> 
-      {/* Added py-28 to prevent overlap with Navbar */}
+      {/* Main Content - Reduced padding-top */}
+      <div className="flex flex-col lg:flex-row lg:items-start gap-12 lg:gap-24 px-4 py-12 max-w-[90rem] mx-auto"> 
+        {/* Changed from py-28 to py-12 */}
 
         {/* Left Side - Brand Description */}
         <div className="lg:w-1/2 flex flex-col justify-start space-y-6">
