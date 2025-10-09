@@ -14,14 +14,26 @@ export default function NotificationPanel({ open, onClose }) {
       api.get("/project/user/notification")
         .then(res => {
           if (res.data.success) {
-            const mappedNotifications = res.data.data.map(n => ({
-              id: n.notification_id,
-              project: n.type,
-              description: n.content,
-              date: new Date(n.created_at).toLocaleDateString(),
-              time: new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              isNew: !n.is_read
-            }));
+            const mappedNotifications = res.data.data.map(n => {
+              const dateObj = new Date(n.created_at); // parse the DB timestamp
+
+              const day = String(dateObj.getUTCDate()).padStart(2, '0');
+              const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // months are 0-indexed
+              const year = dateObj.getUTCFullYear();
+
+              const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+              const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+
+              return {
+                id: n.notification_id,
+                project: n.type,
+                description: n.content,
+                date: `${day}/${month}/${year}`, // DD/MM/YYYY
+                time: `${hours}:${minutes}`,     // HH:MM
+                isNew: !n.is_read
+              };
+            });
+            
             setNotifications(mappedNotifications);
           }
         })

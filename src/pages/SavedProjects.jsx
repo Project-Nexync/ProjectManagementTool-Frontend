@@ -1,57 +1,75 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardNav from "../components/DashboardNav";
 import Logo from "../dashboard/Logo";
 import DateTimeDisplay from "../dashboard/DateTimeDisplay";
 import ProjectCard from "../dashboard/ProjectCard";
+import api from "../API.jsx";
 import backgroundImage from "../assets/bg-screen.png";
 
-// Example static data
-const savedProjects = [
-  {
-    id: 1,
-    title: "Website Redesign Project",
-    description: "Revamping the company's main website for improved UX, modern UI, and mobile responsiveness.",
-    dueDate: "12 August, 2025",
-    dueTime: "3.00 p.m.",
-    progress: 41,
-    completed: false,
-    team: ["/src/assets/usericon.png", "/src/assets/usericon.png", "/src/assets/usericon.png", "K"],
-    tasks: 5,
-    comments: 3,
-    attachments: 4,
-    completedTasks: 5,
-    totalTasks: 9,
-    color: "blue"
-  },
-  {
-    id: 2,
-    title: "Website Bug Fixing",
-    description: "Fixing the marked bugs of the overall website and run full walkthrough again",
-    dueDate: "20 July, 2025",
-    dueTime: "11.59 p.m.",
-    progress: 100,
-    completed: true,
-    team: ["/src/assets/usericon.png", "/src/assets/usericon.png", "K"],
-    tasks: 3,
-    comments: 3,
-    attachments: 4,
-    completedTasks: 5,
-    totalTasks: 9,
-    color: "green"
-  },
-  // ...add more projects as needed
-];
-
 export default function SavedProjects() {
+  const [savedProjects, setSavedProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
+  const navigate = useNavigate();
+
+  // Fetch saved project IDs
+  const fetchSavedProjects = async () => {
+    try {
+      const res = await api.get("/project/user/getsaveproject");
+      if (res.data.success) {
+        setSavedProjects(res.data.projects.map(p => p.project_id));
+      }
+    } catch (err) {
+      console.error("Failed to fetch saved projects:", err);
+    }
+  };
+
+  // Fetch all projects
+  const fetchAllProjects = async () => {
+    try {
+      const res = await api.get("/project/viewAllproject");
+      if (res.data.success) {
+        setAllProjects(res.data.projects);
+      }
+    } catch (err) {
+      console.error("Failed to fetch all projects:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchSavedProjects();
+    fetchAllProjects();
+  }, []);
+
+  // Filter projects to only saved ones
+  const filteredProjects = allProjects.filter(project =>
+    savedProjects.includes(project.project_id)
+  );
+
+
+  const mappedProjects = filteredProjects.map(project => ({
+    project_id: project.project_id,
+    title: project.name,
+    description: project.description,
+    progress: 0,
+    completed: false,
+    team: project.members?.map(() => "/src/assets/usericon.png") || [],
+    tasks: 0,
+    completedTasks: 0,
+    totalTasks: 0,
+    comments: 0,
+    attachments: 0,
+    color: "blue",
+  }));
+
   return (
     <div
       className="min-h-screen w-full bg-[#0a1834]"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <div className="flex flex-row items-center px-8 pt-4">
@@ -60,19 +78,29 @@ export default function SavedProjects() {
           <DashboardNav />
         </div>
       </div>
+
       <div className="flex flex-row items-center px-8 mt-6 gap-20">
         <div className="-mt-12">
-        <DateTimeDisplay />
+          <DateTimeDisplay />
         </div>
-        <div className="flex flex-col gap-0">
+        {/* <div className="flex flex-col gap-0">
           <h1 className="text-4xl font-bold text-white">Saved Projects</h1>
-          <span className="text-lg text-blue-200">Keep your most important projects saved here to easier access</span>
-        </div>
+          <span className="text-lg text-blue-200">
+            Keep your most important projects saved here for easier access
+          </span>
+        </div> */}
       </div>
+
       <div className="px-8 mt-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-start">
-          {savedProjects.map(project => (
-            <ProjectCard key={project.id} {...project} />
+          {mappedProjects.map(project => (
+            <div
+              key={project.project_id}
+              onClick={() => navigate(`/project/${project.project_id}`)}
+              className="cursor-pointer"
+            >
+              <ProjectCard {...project} />
+            </div>
           ))}
         </div>
       </div>
