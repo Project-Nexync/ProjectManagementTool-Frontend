@@ -63,7 +63,13 @@ export default function TaskTable() {
   const updateStatus = async (taskId, newStatus) => {
     try {
       await api.put(`/edit/${projectId}/progress/${taskId}`, { progress: newStatus });
-      setTasks(prev => prev.map(t => (t.id === taskId ? { ...t, status: newStatus } : t)));
+
+      // Update tasks locally immediately
+      setTasks(prev =>
+        prev.map(t =>
+          t.task_id === taskId ? { ...t, status: newStatus } : t
+        )
+      );
     } catch (err) {
       console.error(err);
       alert("Failed to update status");
@@ -235,7 +241,7 @@ export default function TaskTable() {
                           await api.put(`/edit/${projectId}/duedate/${id}`, {
                             duedate: newDueDate.replace("T", " "),
                           });
-                          setTasks(prev => prev.map(t => t.id === id ? { ...t, deadline: new Date(newDueDate) } : t));
+                          setTasks(prev => prev.map(t => t.task_id === id ? { ...t, due_date: new Date(newDueDate) } : t));
                         } catch (err) {
                           console.error("Failed to update due date", err);
                           alert("Failed to update due date");
@@ -259,32 +265,30 @@ export default function TaskTable() {
                   </div>
                 </td>
                 <td className="py-2 px-2">
-  <div className="flex items-center gap-2 flex-wrap">
-    {attachments.length > 0
-      ? attachments.map((file, idx) => (
-          <span
-            key={idx}
-            onClick={() => viewFile(file.file_id)}
-            className="text-white underline text-sm cursor-pointer"
-          >
-            {file.file_name}
-          </span>
-        ))
-      : <span className="text-gray-400 text-sm">No files</span>
-    }
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {attachments.length > 0
+                      ? attachments.map((file, idx) => (
+                          <span
+                            key={idx}
+                            onClick={() => viewFile(file.file_id)}
+                            className="text-white underline text-sm cursor-pointer"
+                          >
+                            {file.file_name}
+                          </span>
+                        ))
+                      : <span className="text-gray-400 text-sm">No files</span>
+                    }
 
-    {/* Single + button for the task, inline with file names */}
-    <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 w-6 h-6 flex items-center justify-center text-sm rounded">
-      +
-      <input
-        type="file"
-        className="hidden"
-        onChange={(e) => handleFileUpload(e, id)}
-      />
-    </label>
-  </div>
-</td>
-
+                    <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 w-6 h-6 flex items-center justify-center text-sm rounded">
+                      +
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => handleFileUpload(e, id)}
+                      />
+                    </label>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
