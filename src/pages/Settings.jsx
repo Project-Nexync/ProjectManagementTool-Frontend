@@ -7,7 +7,7 @@ import axios from "axios";
 
 import backgroundImage from "../assets/bg-screen.png";
 import nexyncLogo from "../assets/nexync.png";
-import api from "../API.jsx"; // API helper
+import api from "../api.jsx"; // API helper
 
 export default function Settings() {
   const [firstName, setFirstName] = useState("");
