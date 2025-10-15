@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:7000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "https://chat-backend-uza0.onrender.com";
 
 export default function ChatContainer({ projectId, user }) {
   const [messages, setMessages] = useState([]);

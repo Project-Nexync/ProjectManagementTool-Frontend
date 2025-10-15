@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // ✅ missing import
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import api from "../API.jsx"; // adjust path if needed
+import api from "../api.jsx"; // adjust path if needed
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

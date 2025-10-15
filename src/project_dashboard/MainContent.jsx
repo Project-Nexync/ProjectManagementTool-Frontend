@@ -4,7 +4,7 @@ import { BsFillBookmarkHeartFill } from "react-icons/bs";
 import { BiSolidBookmarkAltMinus } from "react-icons/bi";
 import { FaCalendarAlt } from "react-icons/fa";
 import { AiFillPieChart, AiOutlinePlus } from "react-icons/ai";
-import api from "../API.jsx";
+import api from "../api.jsx";
 
 export default function ProjectMainContent() {
   const { projectId } = useParams(); 

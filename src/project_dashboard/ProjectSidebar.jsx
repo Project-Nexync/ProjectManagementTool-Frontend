@@ -5,7 +5,7 @@ import Logo from "../dashboard/Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGraduationCap } from "@fortawesome/free-solid-svg-icons";
 import CreateTask from "../components/CreateTask";
-import api from "../API.jsx"; // axios instance
+import api from "../api.jsx"; // axios instance
 
 export default function ProjectSidebar() {
   const { projectId } = useParams();
