@@ -4,7 +4,7 @@ import DashboardNav from "../components/DashboardNav";
 import Logo from "../dashboard/Logo";
 import DateTimeDisplay from "../dashboard/DateTimeDisplay";
 import ProjectCard from "../dashboard/ProjectCard";
-import api from "../API.jsx";
+import api from "../api.jsx";
 import backgroundImage from "../assets/bg-screen.png";
 
 export default function SavedProjects() {
