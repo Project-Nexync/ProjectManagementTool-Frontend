@@ -5,7 +5,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import { RiAiGenerate2 } from "react-icons/ri";
 import { useParams } from "react-router-dom";
-import api from "../API.jsx"; 
+import api from "../api.jsx"; 
 
 export default function CreateTask({ onFinish }) {
   const { projectId } = useParams();

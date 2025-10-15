@@ -6,7 +6,7 @@ import { CgSandClock } from "react-icons/cg";
 import { SiTicktick } from "react-icons/si";
 import { GiFullFolder } from "react-icons/gi";
 import CreateProject from "../components/CreateProject";
-import api from "../API.jsx"; // your existing api instance
+import api from "../api.jsx"; // your existing api instance
 
 export default function Sidebar({ onSectionSelect }) {
   const [open, setOpen] = useState({

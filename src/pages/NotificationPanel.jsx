@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NotificationItem from "../components/NotificationItem";
 import { IoClose } from "react-icons/io5";
-import api from "../API.jsx";
+import api from "../api.jsx";
 
 export default function NotificationPanel({ open, onClose }) {
   const [notifications, setNotifications] = useState([]);
