@@ -79,7 +79,7 @@ function CreateProject({ open, onClose }) {
     };
 
     try {
-      const res = await api.post("http://localhost:5000/project/addproject", payload);
+      const res = await api.post("/project/addproject", payload);
       console.log("Project created:", res.data);
       onClose();
     } catch (err) {

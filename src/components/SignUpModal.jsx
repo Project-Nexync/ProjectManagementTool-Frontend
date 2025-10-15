@@ -54,7 +54,7 @@ function SignUpModal({ onClose, onSwitchToSignIn }) {
         // skills: selectedSkills, // still commented
       };
 
-      const res = await axios.post("http://localhost:5000/auth/register", payload);
+      const res = await axios.post("/auth/register", payload);
       console.log(res.data);
       alert("Registered successfully");
       onClose();
