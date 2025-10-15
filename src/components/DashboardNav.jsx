@@ -6,7 +6,7 @@ import { IoMdNotifications } from 'react-icons/io';
 import { BsBookmarkFill } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
 import DefaultUserIcon from '../assets/usericon.png';
-import api from "../API.jsx";
+import api from "../api.jsx";
 
 function TopNav() {
   const [showNotifications, setShowNotifications] = useState(false);

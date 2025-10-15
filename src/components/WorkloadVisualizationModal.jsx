@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"; // get projectId from URL
 import { IoClose } from "react-icons/io5";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
-import api from "../API.jsx";
+import api from "../api.jsx";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

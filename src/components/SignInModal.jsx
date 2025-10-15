@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NexyncLogo from "../assets/nexync.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import api from "../API.jsx";
+import api from "../api.jsx";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function SignInModal({ onClose, onSwitchToSignUp }) {

@@ -3,7 +3,7 @@ import NexyncLogo from "../assets/nexync.png";
 import { IoClose } from "react-icons/io5";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import api from "../API"; // axios instance
+import api from "../api.jsx"; // axios instance
 
 const inputClass =
   "w-full border rounded-lg border-gray-400 px-4 py-2 placeholder-gray-400 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#2ecc40]";

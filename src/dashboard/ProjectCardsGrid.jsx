@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard";
-import api from "../API.jsx"; // make sure api.jsx exports default api
+import api from "../api.jsx"; // make sure api.jsx exports default api
 
 export default function ProjectCardsGrid({ search }) {
   const [projects, setProjects] = useState([]);
