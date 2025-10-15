@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
+import api from "../api.jsx";
 // import NexyncLogo from "../assets/nexync.png"; // optional
 
 function SignUpModal({ onClose, onSwitchToSignIn }) {
@@ -54,7 +54,7 @@ function SignUpModal({ onClose, onSwitchToSignIn }) {
         // skills: selectedSkills, // still commented
       };
 
-      const res = await axios.post("/auth/register", payload);
+     const res = await api.post("/auth/register", payload);
       console.log(res.data);
       alert("Registered successfully");
       onClose();
