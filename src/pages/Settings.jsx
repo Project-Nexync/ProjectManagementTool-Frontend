@@ -65,7 +65,7 @@ export default function Settings() {
     if (!file) return;
 
     try {
-      // 1️⃣ Ask backend for signed URL
+      //Ask backend for signed URL
       const { data } = await api.post("/upload/profile-pic/generate-url", {
         fileName: file.name,
         fileType: file.type,
@@ -77,15 +77,15 @@ export default function Settings() {
         return;
       }
 
-      // 2️⃣ Upload image directly to S3
+      //Upload image directly to S3
       await axios.put(uploadUrl, file, {
         headers: { "Content-Type": file.type },
       });
 
-      // 3️⃣ Get the public image URL (remove ?signature)
+      //Get the public image URL (remove ?signature)
       const imageUrl = uploadUrl.split("?")[0];
 
-      // 4️⃣ Update UI instantly
+      //Update UI instantly
       setProfilePic(imageUrl);
       alert(" Profile picture updated successfully!");
     } catch (error) {
@@ -103,7 +103,7 @@ export default function Settings() {
       const res = await api.delete("/upload/profile-pic/delete");
       if (res.data.success) {
         setProfilePic(""); // remove from UI
-        alert("🗑️ Profile picture deleted successfully!");
+        alert("Profile picture deleted successfully!");
       } else {
         alert("Failed to delete profile picture!");
       }
@@ -330,6 +330,8 @@ export default function Settings() {
               </div>
             </div>
 
+            
+
             {/* Save Changes */}
             {editMode && (
               <div className="flex gap-4 col-span-2 mt-4">
@@ -349,7 +351,35 @@ export default function Settings() {
               </div>
             )}
           </form>
+          {/* Google Calendar Integration */}
+            <div className="flex items-center col-span-2 mt-8">
+              <button
+                type="button"
+                
+               onClick={() => {
+                const token = localStorage.getItem("token"); // get JWT
+                window.location.href = `http://localhost:5000/api/auth/google?token=${token}`;
+              }}
+                
+                className="bg-[#0077FF] hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded-full shadow transition"
+              >
+                Connect with Google Calendar
+              </button>
+
+              <div className="flex flex-col ml-4">
+                <label className="text-white font-semibold mb-1">
+                  Sync Project Deadlines with Google Calendar
+                </label>
+                <span className="text-gray-300 text-xs">
+                  Receive automatic event reminders for task deadlines.
+                </span>
+              </div>
+
+              
+            </div>
+
         </div>
+
 
         {/* Profile Photo Section */}
         <div className="flex flex-col items-center justify-center min-w-[340px] max-w-[340px] bg-transparent">
