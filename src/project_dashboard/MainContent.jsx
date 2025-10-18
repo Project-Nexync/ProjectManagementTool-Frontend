@@ -242,12 +242,21 @@ export default function ProjectMainContent() {
             <span className="text-blue-200 font-bold text-sm">TEAM :</span>
             <div className="flex -space-x-2 cursor-pointer" onClick={() => setShowMembers((v) => !v)}>
               {project.members?.map((m, idx) => (
-                <img
+                <div
                   key={idx}
-                  src="/src/assets/usericon.png"
-                  alt={m.username || m.user_name || "member"}
-                  className="w-8 h-8 rounded-full border-2 border-white"
-                />
+                  className="w-8 h-8 rounded-full border-2 border-white bg-[#00527d] flex items-center justify-center text-white font-semibold text-sm"
+                  title={m.username || m.user_name || m.email} // optional hover tooltip
+                >
+                  {(() => {
+                    const name = m.username || m.user_name || "M";
+                    if (name.length === 1) return name[0].toUpperCase() + "X";
+                    return name
+                      .replace(/\s+/g, "")
+                      .slice(0, 2)
+                      .toUpperCase();
+                  })()}
+                </div>
+
               ))}
             </div>
             <button
@@ -268,11 +277,16 @@ export default function ProjectMainContent() {
               {project.members && project.members.length > 0 ? (
                 project.members.map((member, idx) => (
                   <div key={idx} className="flex items-center gap-2 text-white text-sm">
-                    <img
-                      src="/src/assets/usericon.png"
-                      alt={member.username || member.user_name || "member"}
-                      className="w-6 h-6 rounded-full border-2 border-white"
-                    />
+                   <div className="w-6 h-6 rounded-full border-2 border-white bg-[#00527d] flex items-center justify-center text-white font-semibold text-xs">
+                      {(() => {
+                        const name = member.username || member.user_name || "M";
+                        if (name.length === 1) return name[0].toUpperCase() + "X"; // fallback second letter
+                        return name
+                          .replace(/\s+/g, "") // remove spaces
+                          .slice(0, 2)         // take first two letters
+                          .toUpperCase();
+                      })()}
+                    </div>
                     <span>{member.username || member.user_name || member.email}</span>
                     <span className="ml-auto text-gray-400 text-xs">{member.role}</span>
                   </div>
