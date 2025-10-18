@@ -21,6 +21,8 @@ export default function TaskTable() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editedTask, setEditedTask] = useState({ id: null, name: "", deadline: "" });
 
+  const [successMessage, setSuccessMessage] = useState("");
+
   // Fetch tasks
   useEffect(() => {
     const fetchTasks = async () => {
@@ -133,26 +135,21 @@ export default function TaskTable() {
   // Handle saving edited task
   const handleSaveTask = async () => {
     try {
-      // Update task description (name)
       await api.put(`/edit/${projectId}/edittaskdes/${editedTask.id}`, {
         task_name: editedTask.name,
       });
 
-      // Update due date
       await api.put(`/edit/${projectId}/duedate/${editedTask.id}`, {
         duedate: editedTask.deadline.replace("T", " "),
       });
 
-      // Update tasks locally
-      setTasks(prev =>
-        prev.map(t =>
-          t.task_id === editedTask.id
-            ? { ...t, task_name: editedTask.name, due_date: new Date(editedTask.deadline) }
-            : t
-        )
-      );
-
+      setTasks(prev => prev.map(t => t.task_id === editedTask.id ? { ...t, task_name: editedTask.name } : t ) );
       setShowEditModal(false);
+
+      // Show success message
+      setSuccessMessage("Task updated successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+
     } catch (err) {
       console.error(err);
       alert("Failed to update task");
@@ -178,6 +175,14 @@ export default function TaskTable() {
 
   return (
     <div className="bg-[rgba(41,62,86,0.3)] rounded-xl shadow-lg w-full border-2 border-[#9FB1EB]">
+      
+      {/* Success message */}
+      {successMessage && (
+        <div className="text-green-400 font-bold text-center py-2">
+          {successMessage}
+        </div>
+      )}
+
       <div className="overflow-x-auto">
         <table className="min-w-full text-[#B5C7FF] text-md table-fixed">
           <thead>
@@ -289,8 +294,16 @@ export default function TaskTable() {
                 <td className="py-2 px-2">
                   {deadline ? (
                     <div>
-                      <div>{new Date(deadline).toLocaleDateString()}</div>
-                      <div>{new Date(deadline).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace(/am|pm/i, m => m.toUpperCase())}</div>
+                      <div>{new Date(deadline).toISOString().split("T")[0]}</div> 
+                      <div>
+                        {(() => {
+                          const [hourStr, minute] = new Date(deadline).toISOString().split("T")[1].slice(0,5).split(":");
+                          let hour = parseInt(hourStr, 10);
+                          const ampm = hour >= 12 ? "PM" : "AM";
+                          hour = hour % 12 || 12; 
+                          return `${hour.toString().padStart(2, "0")}:${minute} ${ampm}`;
+                        })()}
+                      </div>
                     </div>
                   ) : "-"}
                 </td>

@@ -11,7 +11,7 @@ import WorkloadVisualizationModal from "../components/WorkloadVisualizationModal
 import { VscGraph } from "react-icons/vsc";
 
 export default function ProjectDashboard() {
-  const { projectId } = useParams(); // get projectId from URL
+  const { projectId } = useParams(); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Get user info directly from localStorage
@@ -21,7 +21,7 @@ export default function ProjectDashboard() {
   if (storedUser) {
     try {
       user = JSON.parse(storedUser);
-      console.log("Logged-in user:", user.id); // Check user object
+      console.log("Logged-in user:", user.id); 
     } catch (err) {
       console.error("Error parsing stored user:", err);
     }

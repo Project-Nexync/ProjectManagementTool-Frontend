@@ -12,6 +12,14 @@ export default function SavedProjects() {
   const [allProjects, setAllProjects] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("token");
+      if (!user || !token) {
+        window.location.href = "/";
+      }
+    }, []);   
+
   // Fetch saved project IDs
   const fetchSavedProjects = async () => {
     try {
@@ -83,12 +91,6 @@ export default function SavedProjects() {
         <div className="-mt-12">
           <DateTimeDisplay />
         </div>
-        {/* <div className="flex flex-col gap-0">
-          <h1 className="text-4xl font-bold text-white">Saved Projects</h1>
-          <span className="text-lg text-blue-200">
-            Keep your most important projects saved here for easier access
-          </span>
-        </div> */}
       </div>
 
       <div className="px-8 mt-10">

@@ -1,31 +1,53 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import NotificationPanel from "../pages/NotificationPanel";
-import { MdSearch } from 'react-icons/md';
-import { AiFillHome } from 'react-icons/ai';
-import { IoMdNotifications } from 'react-icons/io';
-import { BsBookmarkFill } from 'react-icons/bs';
-import { FiSettings } from 'react-icons/fi';
-import DefaultUserIcon from '../assets/usericon.png';
+import { MdSearch } from "react-icons/md";
+import { AiFillHome } from "react-icons/ai";
+import { IoMdNotifications } from "react-icons/io";
+import { BsBookmarkFill } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
+import DefaultUserIcon from "../assets/usericon.png";
 import api from "../api.jsx";
 
 function TopNav() {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
   const [profilePic, setProfilePic] = useState(DefaultUserIcon);
-  
-    useEffect(() => {
-      const fetchProfilePic = async () => {
-        try {
-          const res = await api.get("/upload/profile-pic/view");
-          if (res.data && res.data.url) {
-            setProfilePic(res.data.url);
-          }
-        } catch (err) {
-          console.error("Error fetching profile picture:", err);
+  const dropdownRef = useRef(null);
+
+  // Fetch profile picture
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        const res = await api.get("/upload/profile-pic/view");
+        if (res.data && res.data.url) {
+          setProfilePic(res.data.url);
         }
-      };
-      fetchProfilePic();
-    }, []);
+      } catch (err) {
+        console.error("Error fetching profile picture:", err);
+      }
+    };
+    fetchProfilePic();
+  }, []);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -34,7 +56,7 @@ function TopNav() {
         <div className="relative w-1/4 h-12 ml-18">
           <input
             className="bg-[#D9D9D923] text-white px-4 py-2 rounded-4xl w-full pr-10 border border-zinc-400"
-            style={{ fontFamily: 'HelveticaBold, sans-serif', letterSpacing: '0.08em' }}
+            style={{ fontFamily: "HelveticaBold, sans-serif", letterSpacing: "0.08em" }}
             placeholder="Search Projects"
           />
           <MdSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl pointer-events-none" />
@@ -67,10 +89,27 @@ function TopNav() {
             <span className="text-xs tracking-widest">Settings</span>
           </a>
 
-          {/* Username + Avatar (slightly spaced) */}
-          <div className="flex items-center ml-2 gap-4">
+          {/* Username + Avatar */}
+          <div className="relative flex items-center ml-2 gap-4" ref={dropdownRef}>
             <span className="font-bold text-white">{user?.username || "Guest"}</span>
-            <img src={profilePic} alt="Profile" className="w-10 h-10 rounded-full border-2 border-blue-400" />
+            <img
+              src={profilePic}
+              alt="Profile"
+              className="w-10 h-10 rounded-full border-2 border-blue-400 cursor-pointer"
+              onClick={() => setShowDropdown((prev) => !prev)}
+            />
+
+            {/* Dropdown Menu */}
+            {showDropdown && (
+              <div className="absolute right-0 top-12 bg-gray-800 border border-gray-700 rounded-lg shadow-lg w-40">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-white hover:bg-gray-700 rounded-lg"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

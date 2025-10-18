@@ -79,13 +79,13 @@ export default function CreateTask({ onFinish }) {
           date.setHours(time.getHours());
           date.setMinutes(time.getMinutes());
           date.setSeconds(time.getSeconds());
-          dueDateTime = date.toISOString(); // send as ISO string
+          dueDateTime = date.toISOString(); 
         }
 
         return {
           taskName: t.task,
           status: "Pending",
-          fileAttachment: t.fileAttachment || "", // optional
+          fileAttachment: t.fileAttachment || "", 
           dueDate: dueDateTime,
           assignedMembers: t.assignees.map((a) => a.username),
         };
@@ -94,7 +94,7 @@ export default function CreateTask({ onFinish }) {
 
     try {
       await api.post(`/project/${projectId}/createTask`, payload);
-      onFinish(payload); // optionally close modal or notify parent
+      onFinish(payload); 
     } catch (err) {
       console.error("Failed to save tasks", err);
     }

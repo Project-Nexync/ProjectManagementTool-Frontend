@@ -8,7 +8,7 @@ import { VscGraph } from "react-icons/vsc";
 
 export default function MainContent() {
   const [user] = useState({ profilePic: null });
-  const [section, setSection] = useState('ongoing'); // 'ongoing', 'completed', 'all'
+  const [section, setSection] = useState('ongoing');
   const [showHeatmap, setShowHeatmap] = useState(false);
 
   // Filtering logic for projects

@@ -7,7 +7,9 @@ import axios from "axios";
 
 import backgroundImage from "../assets/bg-screen.png";
 import nexyncLogo from "../assets/nexync.png";
-import api from "../api.jsx"; // API helper
+import api from "../api.jsx"; 
+
+
 
 export default function Settings() {
   const [firstName, setFirstName] = useState("");
@@ -24,6 +26,14 @@ export default function Settings() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+   useEffect(() => {
+    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    if (!user || !token) {
+      window.location.href = "/";
+    }
+  }, []);
 
   //Fetch user profile and profile picture
   useEffect(() => {
@@ -102,7 +112,7 @@ export default function Settings() {
     try {
       const res = await api.delete("/upload/profile-pic/delete");
       if (res.data.success) {
-        setProfilePic(""); // remove from UI
+        setProfilePic(""); 
         alert("Profile picture deleted successfully!");
       } else {
         alert("Failed to delete profile picture!");
@@ -357,9 +367,11 @@ export default function Settings() {
                 type="button"
                 
                onClick={() => {
-                const token = localStorage.getItem("token"); // get JWT
-                window.location.href = `http://localhost:5000/api/auth/google?token=${token}`;
-              }}
+                  const token = localStorage.getItem("token");
+                  const redirectUrl = encodeURIComponent("/settings");
+                  window.location.href = `${api.defaults.baseURL}/api/auth/google?state=${token}&redirect=${redirectUrl}`;
+                }}
+
                 
                 className="bg-[#0077FF] hover:bg-blue-800 text-white font-semibold px-4 py-2 rounded-full shadow transition"
               >
