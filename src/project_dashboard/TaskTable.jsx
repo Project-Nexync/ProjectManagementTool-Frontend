@@ -39,17 +39,23 @@ export default function TaskTable() {
     fetchTasks();
   }, [projectId]);
 
-  const assigneeOptions = [
-    "All",
-    ...Array.from(new Set(tasks.map(t => t.assigned_to?.toString()).filter(Boolean)))
-  ];
+const assigneeOptions = [
+  "All",
+  ...Array.from(
+    new Set(
+      tasks
+        .flatMap(task => task.assigned_to || []) 
+        .filter(Boolean) 
+    )
+  )
+];
 
   const mappedTasks = tasks.map(task => ({
     id: task.task_id,
     task: task.task_name,
     status: task.status,
     deadline: task.due_date,
-    assignees: task.assigned_to ? [task.assigned_to.toString()] : [],
+    assignees: task.assigned_to || [],
     attachments: task.attachments || []
   }));
 
@@ -319,10 +325,7 @@ export default function TaskTable() {
                           if (!a) return "M"; 
                           const name = a.trim();
                           if (name.length === 1) return name[0].toUpperCase() + "X";
-                          return name
-                            .replace(/\s+/g, "")
-                            .slice(0, 2)
-                            .toUpperCase();
+                          return name.replace(/\s+/g, "").slice(0, 2).toUpperCase();
                         })()}
                       </div>
                     ))}
