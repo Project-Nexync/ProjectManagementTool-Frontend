@@ -15,10 +15,9 @@ export default function NotificationPanel({ open, onClose }) {
         .then(res => {
           if (res.data.success) {
             const mappedNotifications = res.data.data.map(n => {
-              const dateObj = new Date(n.created_at); // parse the DB timestamp
-
+              const dateObj = new Date(n.created_at); 
               const day = String(dateObj.getUTCDate()).padStart(2, '0');
-              const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); // months are 0-indexed
+              const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0'); 
               const year = dateObj.getUTCFullYear();
 
               const hours = String(dateObj.getUTCHours()).padStart(2, '0');
@@ -28,8 +27,8 @@ export default function NotificationPanel({ open, onClose }) {
                 id: n.notification_id,
                 project: n.type,
                 description: n.content,
-                date: `${day}/${month}/${year}`, // DD/MM/YYYY
-                time: `${hours}:${minutes}`,     // HH:MM
+                date: `${day}/${month}/${year}`, 
+                time: `${hours}:${minutes}`,    
                 isNew: !n.is_read
               };
             });

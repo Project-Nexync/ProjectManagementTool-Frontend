@@ -1,7 +1,6 @@
 import { MdCalendarMonth } from "react-icons/md";
 
 function ProjectCard({ project_id, title, description, due, time }) {
-  // Convert due date to short month form
   const formattedDue = new Date(due);
   const shortMonth = formattedDue.toLocaleString("en-US", { month: "short" });
   const day = formattedDue.getDate();

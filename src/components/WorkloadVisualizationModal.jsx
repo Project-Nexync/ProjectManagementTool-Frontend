@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // get projectId from URL
+import { useParams } from "react-router-dom"; 
 import { IoClose } from "react-icons/io5";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
@@ -8,7 +8,7 @@ import api from "../api.jsx";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function WorkloadVisualizationModal({ onClose }) {
-  const { projectId } = useParams(); // automatically read from URL
+  const { projectId } = useParams(); 
   const [teamData, setTeamData] = useState([]);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function WorkloadVisualizationModal({ onClose }) {
         if (res.data.success && res.data.users) {
           const mappedData = res.data.users.map(user => ({
             name: user.name,
-            avatar: "https://randomuser.me/api/portraits/lego/1.jpg", // placeholder
+            avatar: "https://randomuser.me/api/portraits/lego/1.jpg", 
             percentage: parseFloat(user.contribution)
           }));
           setTeamData(mappedData);

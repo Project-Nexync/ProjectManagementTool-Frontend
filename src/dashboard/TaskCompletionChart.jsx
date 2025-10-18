@@ -26,7 +26,7 @@ export default function TaskCompletionChart() {
 
   const options = {
     responsive: true,
-    cutout: '70%', // for doughnut, use 0 for pie
+    cutout: '70%',
     plugins: {
       legend: {
         display: true,

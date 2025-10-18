@@ -3,7 +3,7 @@ import NexyncLogo from "../assets/nexync.png";
 import { IoClose } from "react-icons/io5";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import api from "../api.jsx"; // axios instance
+import api from "../api.jsx"; 
 
 const inputClass =
   "w-full border rounded-lg border-gray-400 px-4 py-2 placeholder-gray-400 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#2ecc40]";
@@ -13,10 +13,10 @@ const labelClass =
 const roles = [
   { value: "member", label: "member" },
   { value: "manager", label: "manager" },
-  { value: "visitor", label: "client (view-only)" }, // changed value to visitor
+  { value: "visitor", label: "client (view-only)" }, 
 ];
 
-// helper to format as YYYY-MM-DD HH:mm:ss
+
 const formatDateTime = (dateObj) => {
   if (!dateObj) return null;
   const pad = (n) => (n < 10 ? "0" + n : n);
@@ -73,9 +73,9 @@ function CreateProject({ open, onClose }) {
     const payload = {
       name,
       description,
-      startdate: startDate ? formatDateTime(startDate).split(" ")[0] : null, // only date part
-      endate: endDateTime ? formatDateTime(endDateTime) : null, // full datetime
-      assignee: team.filter((m) => m.email.trim() !== ""), // remove empty
+      startdate: startDate ? formatDateTime(startDate).split(" ")[0] : null, 
+      endate: endDateTime ? formatDateTime(endDateTime) : null, 
+      assignee: team.filter((m) => m.email.trim() !== ""), 
     };
 
     try {

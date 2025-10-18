@@ -1,13 +1,13 @@
   import { useState } from "react";
   import Logo from '../assets/nexync.png';
-  import UserIcon from '../assets/usericon.png'; // default icon
+  import UserIcon from '../assets/usericon.png'; 
   import { Link } from "react-router-dom";
 
 
   export default function Navbar({ user }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    // user.profilePic can be null/undefined
+    
     const profilePic = user?.profilePic || UserIcon;
 
     return (
@@ -25,7 +25,6 @@
           {/* Center Menu */}
           <div className="absolute left-1/2 transform -translate-x-1/2 font-helvetica hidden md:flex space-x-20 text-[#C4C6C8]">
             <Link to="/" className="hover:text-[#1C89EF]">Home</Link>
-            {/* <Link to="/dashboard" className="hover:text-[#1C89EF]">Dashboard</Link> */}
             <Link to="/features" className="hover:text-[#1C89EF]">Features</Link>
             <Link to="/about" className="hover:text-[#1C89EF]">About</Link>
           </div>
@@ -61,7 +60,6 @@
         {isOpen && (
           <div className="md:hidden px-2 pt-0 pb-1 space-y-0 bg-transparent shadow-md text-[#C4C6C8]">
             <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Home</a>
-            {/* <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Dashboard</a> */}
             <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">Features</a>
             <a href="#" className="block px-3 py-2 hover:text-[#1C89EF]">About</a>
           </div>
