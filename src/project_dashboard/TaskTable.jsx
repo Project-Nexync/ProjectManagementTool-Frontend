@@ -310,10 +310,25 @@ export default function TaskTable() {
                 <td className="py-2 px-2">
                   <div className="flex -space-x-2">
                     {assignees.map((a, idx) => (
-                      <img key={a + idx} src={`/src/assets/usericon.png`} alt={a} className="w-6 h-6 rounded-full border-2 border-white" />
+                      <div
+                        key={a + idx}
+                        className="w-6 h-6 rounded-full border-2 border-white bg-[#00527d] flex items-center justify-center text-white font-semibold text-xs"
+                        title={a} 
+                      >
+                        {(() => {
+                          if (!a) return "M"; 
+                          const name = a.trim();
+                          if (name.length === 1) return name[0].toUpperCase() + "X";
+                          return name
+                            .replace(/\s+/g, "")
+                            .slice(0, 2)
+                            .toUpperCase();
+                        })()}
+                      </div>
                     ))}
                   </div>
                 </td>
+
                 <td className="py-2 px-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     {attachments.length > 0
